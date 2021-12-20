@@ -13,9 +13,9 @@ class AuthProvider {
   Stream<User?> get currentUser {
     return _auth.authStateChanges().map((User? user) {
       if (user == null) {
-        return user;
-      } else {
         return null;
+      } else {
+        return user;
       }
     });
   }
@@ -34,6 +34,7 @@ class AuthProvider {
         "email": authFormUser.email,
         "fullName": authFormUser.fullName,
       });
+
     } on FirebaseAuthException catch (e) {
       var message = "Firebase error";
 
@@ -62,6 +63,24 @@ class AuthProvider {
         message = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
         message = 'Wrong password provided for that user.';
+      }
+
+      throw ApiException(message);
+    } catch (e) {
+      throw UnknownException(e.toString());
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+  
+    } on FirebaseAuthException catch (e) {
+      var message = "Firebase error";
+
+      if (e.code == 'requires-recent-login') {
+        message =
+            'The user must reauthenticate before this operation can be executed.';
       }
 
       throw ApiException(message);

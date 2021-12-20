@@ -5,7 +5,7 @@ import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/widgets/password_form_field.dart';
 
 class AuthScreen extends StatefulWidget {
-  static const String routeName = "auth";
+  static const String routeName = "/auth";
 
   AuthScreen({Key? key}) : super(key: key);
 
@@ -78,179 +78,181 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 30,
-              right: 20,
-              left: 20,
-              bottom: 30,
-            ),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _isSignUp ? "Sign Up" : "Sign In",
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  if (_isSignUp)
-                    ...[
-                      TextFormField(
-                        initialValue: _authForm.fullName,
-                        onChanged: (v) {
-                          _authForm.fullName = v;
-                        },
-                        validator: (v) {
-                          if (v == null || v.isEmpty)
-                            return "This field must to does not empty";
-
-                          if (v.length > 20 || v.length < 2)
-                            return "This field can't be more 40 symbols and less 8";
-
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          label: Text("Full name"),
-                          hintText: "Enter your full name",
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        initialValue: _authForm.login,
-                        onChanged: (v) {
-                          _authForm.login = v.replaceAll(' ', '');
-                        },
-                        validator: (v) {
-                          if (v == null || v.isEmpty)
-                            return "This field must to does not empty";
-
-                          final trimmedValue = v.replaceAll(' ', '');
-                          if (trimmedValue.length > 20 ||
-                              trimmedValue.length < 2)
-                            return "This field can't be more 40 symbols and less 8";
-
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          label: Text("Login"),
-                          hintText: "Enter your Login",
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ].toList(),
-                  TextFormField(
-                    initialValue: _authForm.email,
-                    onChanged: (v) {
-                      _authForm.email = v;
-                    },
-                    validator: (v) {
-                      bool emailValid = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                          .hasMatch(v ?? "");
-
-                      if (v!.length > 100 || v.length < 8)
-                        return "Email does not should be more 100 symbols and less 8";
-
-                      if (emailValid == true) {
-                        return null;
-                      } else {
-                        return "Email id should be valid";
-                      }
-                    },
-                    decoration: InputDecoration(
-                      label: Text("Email"),
-                      hintText: "user@gmail.com",
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 30,
+                right: 20,
+                left: 20,
+                bottom: 30,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _isSignUp ? "Sign Up" : "Sign In",
+                      style: Theme.of(context).textTheme.headline4,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  PasswordFormField(
-                    label: "Password",
-                    value: _authForm.password,
-                    onChanged: (v) {
-                      _authForm.password = v;
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  if (_isSignUp)
-                    ...[
-                      PasswordFormField(
-                        label: "Repeat password",
-                        value: _authForm.repeatPassword,
-                        onChanged: (v) {
-                          _authForm.repeatPassword = v;
-                        },
+                    SizedBox(
+                      height: 50,
+                    ),
+                    if (_isSignUp)
+                      ...[
+                        TextFormField(
+                          initialValue: _authForm.fullName,
+                          onChanged: (v) {
+                            _authForm.fullName = v;
+                          },
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return "This field must to does not empty";
+      
+                            if (v.length > 20 || v.length < 2)
+                              return "This field can't be more 40 symbols and less 8";
+      
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            label: Text("Full name"),
+                            hintText: "Enter your full name",
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          initialValue: _authForm.login,
+                          onChanged: (v) {
+                            _authForm.login = v.replaceAll(' ', '');
+                          },
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return "This field must to does not empty";
+      
+                            final trimmedValue = v.replaceAll(' ', '');
+                            if (trimmedValue.length > 20 ||
+                                trimmedValue.length < 2)
+                              return "This field can't be more 40 symbols and less 8";
+      
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            label: Text("Login"),
+                            hintText: "Enter your Login",
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ].toList(),
+                    TextFormField(
+                      initialValue: _authForm.email,
+                      onChanged: (v) {
+                        _authForm.email = v;
+                      },
+                      validator: (v) {
+                        bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(v ?? "");
+      
+                        if (v!.length > 100 || v.length < 8)
+                          return "Email does not should be more 100 symbols and less 8";
+      
+                        if (emailValid == true) {
+                          return null;
+                        } else {
+                          return "Email id should be valid";
+                        }
+                      },
+                      decoration: InputDecoration(
+                        label: Text("Email"),
+                        hintText: "user@gmail.com",
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CheckboxListTile(
-                        title: Text("Agree wih terms"),
-                        contentPadding: EdgeInsets.all(0),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: _authForm.isUserAgree,
-                        onChanged: (v) {
-                          setState(() {
-                            _authForm.isUserAgree = v!;
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ].toList(),
-                  Builder(builder: (context) {
-                    return SizedBox(
-                      height: 59,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _isFormSend
-                            ? null
-                            : () {
-                                _sendForm();
-                              },
-                        child: _isFormSend
-                            ? Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : Text(
-                                _isSignUp ? "Sign Up" : "Sign In",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onSecondary,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    PasswordFormField(
+                      label: "Password",
+                      value: _authForm.password,
+                      onChanged: (v) {
+                        _authForm.password = v;
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    if (_isSignUp)
+                      ...[
+                        PasswordFormField(
+                          label: "Repeat password",
+                          value: _authForm.repeatPassword,
+                          onChanged: (v) {
+                            _authForm.repeatPassword = v;
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CheckboxListTile(
+                          title: Text("Agree wih terms"),
+                          contentPadding: EdgeInsets.all(0),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: _authForm.isUserAgree,
+                          onChanged: (v) {
+                            setState(() {
+                              _authForm.isUserAgree = v!;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ].toList(),
+                    Builder(builder: (context) {
+                      return SizedBox(
+                        height: 59,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isFormSend
+                              ? null
+                              : () {
+                                  _sendForm();
+                                },
+                          child: _isFormSend
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Text(
+                                  _isSignUp ? "Sign Up" : "Sign In",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color:
+                                        Theme.of(context).colorScheme.onSecondary,
+                                  ),
                                 ),
-                              ),
-                      ),
-                    );
-                  }),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _toggleAuthMode();
-                    },
-                    child: Text(!_isSignUp ? "Sign Up" : "Sign In"),
-                  ),
-                ],
+                        ),
+                      );
+                    }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _toggleAuthMode();
+                      },
+                      child: Text(!_isSignUp ? "Sign Up" : "Sign In"),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
