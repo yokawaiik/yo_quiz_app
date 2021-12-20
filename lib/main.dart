@@ -4,6 +4,8 @@ import 'package:yo_quiz_app/firebase_options.dart';
 import 'package:yo_quiz_app/src/app_quiz.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

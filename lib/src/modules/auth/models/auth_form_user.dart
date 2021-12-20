@@ -5,12 +5,14 @@ class AuthFormUser {
 
   String? password;
   String? repeatPassword;
+  bool isUserAgree;
 
   AuthFormUser({
-    required this.login,
-    required this.email,
-    required this.fullName,
-    required this.password,
-    required this.repeatPassword,
+    this.login,
+    this.email,
+    this.fullName,
+    this.password,
+    this.repeatPassword,
+    this.isUserAgree = false,
   });
 }
