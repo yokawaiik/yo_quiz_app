@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
+import 'package:yo_quiz_app/src/core/widgets/app_bottom_navigation_bar.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 
 
@@ -33,7 +34,7 @@ class MainScreen extends StatelessWidget {
           )
         ],
       ),
-      
+      bottomNavigationBar: AppBottomNavigationBar(),
     );
   }
 }
