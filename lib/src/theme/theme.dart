@@ -55,6 +55,11 @@ class MessengerTheme {
         },
       ),
     ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: _primary,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.black,
+    )
   );
 
 
