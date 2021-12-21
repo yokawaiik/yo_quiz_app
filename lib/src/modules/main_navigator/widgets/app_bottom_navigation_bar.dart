@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
-  AppBottomNavigationBar({Key? key}) : super(key: key);
+  final Function functionNavigate;
+  AppBottomNavigationBar({Key? key, required this.functionNavigate}) : super(key: key);
 
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
@@ -13,6 +15,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     
+
 
     return BottomNavigationBar(
       currentIndex: _currentIndex,
@@ -36,6 +39,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       onTap: (v) {
         setState(() {
           _currentIndex = v;
+          widget.functionNavigate(_currentIndex);
         });
       },
     );

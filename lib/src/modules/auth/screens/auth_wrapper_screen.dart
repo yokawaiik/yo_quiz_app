@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/screens/auth_screen.dart';
-import 'package:yo_quiz_app/src/modules/main/screens/main_screen.dart';
+import 'package:yo_quiz_app/src/modules/main_navigator/screens/main_navigator_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
   static const String routeName = "/auth-wrapper";
@@ -20,7 +20,7 @@ class AuthWrapper extends StatelessWidget {
         } 
 
         if (snapshot.hasData) {
-          return MainScreen();
+          return MainNavigatorScreen();
         } else {
           return AuthScreen();
         }
