@@ -13,7 +13,6 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Profile"),
         actions: [
-          
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
             onSelected: (String i) {
@@ -23,8 +22,14 @@ class ProfileScreen extends StatelessWidget {
                   break;
               }
             },
-            itemBuilder: (BuildContext ctx) => [
-              const PopupMenuItem<String>(
+            itemBuilder: (ctx) => [
+              const PopupMenuItem(
+                value: "1",
+                child: Text('My quiz'),
+                enabled: false,
+              ),
+              
+              const PopupMenuItem(
                 value: "0",
                 child: Text('Sign Out'),
               ),
@@ -33,8 +38,16 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
+          Center(
+            child: Icon(
+              Icons.person,
+              size: 300,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          )
         ],
       ),
     );

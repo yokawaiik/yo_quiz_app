@@ -48,8 +48,8 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
       _currentScreen = _screenList[index];
       _pageController.animateToPage(
         index,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.elasticIn,
       );
     });
   }
@@ -59,7 +59,7 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
     return Scaffold(
       body: PageView.builder(
         controller: _pageController,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (_, __) {
           return _currentScreen;
         },
       ),
