@@ -3,6 +3,12 @@
 Flutter project: quiz.
 
 ## Tasks
+
+profile:
+- [x] show userProfile
+- [ ] user image
+- [ ] users tests
+
 quiz:
 - [ ] create quiz
 - [ ] delete quiz
@@ -14,12 +20,10 @@ quiz:
 home page:
 - [ ] oficial tests
 
-profile:
-- [ ] user image
+other:
 - [ ] leaderboard
-- [ ] show userProfile
+
+profile other:
 - [ ] contacts user 
-- [ ] users tests
 - [ ] user scores
 - [ ] shared tests
-
