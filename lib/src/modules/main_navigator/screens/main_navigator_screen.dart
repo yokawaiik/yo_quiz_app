@@ -16,7 +16,7 @@ class MainNavigatorScreen extends StatefulWidget {
 class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
   late Widget _currentScreen;
 
-  late final List<Widget> _screenList;
+  late final List<Widget?> _screenList;
 
   late PageController _pageController;
 
@@ -34,18 +34,20 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
       Center(
         child: Text("home"),
       ),
-      Center(
-        child: Text("add"),
-      ),
+      // add item
+      null,
       ProfileScreen(),
     ];
 
-    _currentScreen = _screenList[0];
+    _currentScreen = _screenList[0]!;
   }
 
   void _navigate(int index) {
+    // add item
+    if (index == 1) return;
+  
     setState(() {
-      _currentScreen = _screenList[index];
+      _currentScreen = _screenList[index]!;
       _pageController.animateToPage(
         index,
         duration: const Duration(milliseconds: 300),
@@ -58,6 +60,7 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView.builder(
+        physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         itemBuilder: (_, __) {
           return _currentScreen;
