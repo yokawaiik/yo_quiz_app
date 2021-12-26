@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
+import 'package:yo_quiz_app/src/modules/create/screens/create_quiz_screen.dart';
 import 'package:yo_quiz_app/src/modules/main_navigator/widgets/app_bottom_navigation_bar.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
@@ -44,16 +45,45 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
 
   void _navigate(int index) {
     // add item
-    if (index == 1) return;
-  
-    setState(() {
-      _currentScreen = _screenList[index]!;
-      _pageController.animateToPage(
-        index,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.elasticIn,
+    if (index == 1) {
+      showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(8),
+            children: [
+              ListTile(
+                leading: Icon(Icons.post_add),
+                title: Text("Create test"),
+                onTap: () {
+                  Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
+                },
+              ),
+              ListTile(
+                // Todo: create feature
+                enabled: false,
+                leading: Icon(Icons.add_link),
+                title: Text("Get test by id"),
+                onTap: () {
+                  Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
+                },
+              ),
+            ],
+          );
+        },
       );
-    });
+      // return;
+    } else {
+      setState(() {
+        _currentScreen = _screenList[index]!;
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.elasticIn,
+        );
+      });
+    }
   }
 
   @override
@@ -67,6 +97,11 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
         },
       ),
       bottomNavigationBar: AppBottomNavigationBar(functionNavigate: _navigate),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+
+      //   onPressed: () {},
+      // ),
     );
   }
 }

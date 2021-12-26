@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/core/router/app_router.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
+import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/user_profile_provider.dart';
 import 'package:yo_quiz_app/src/theme/theme.dart';
 
@@ -14,6 +15,7 @@ class AppQuiz extends StatelessWidget {
       providers: [
         Provider<AuthProvider>(create: (_) => AuthProvider()),
         Provider<UserProfileProvider>(create: (_) => UserProfileProvider()),
+        Provider<CreateQuizProvider>(create: (_) => CreateQuizProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

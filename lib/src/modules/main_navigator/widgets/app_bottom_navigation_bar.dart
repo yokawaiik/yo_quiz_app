@@ -14,12 +14,12 @@ class AppBottomNavigationBar extends StatefulWidget {
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _currentIndex = 0;
 
-  void _popupSelect(BuildContext context, int v) {
-    switch (v) {
-      case 0:
-        Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
-    }
-  }
+  // void _popupSelect(BuildContext context, int v) {
+  //   switch (v) {
+  //     case 0:
+  //       Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +33,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           label: "Home",
         ),
         BottomNavigationBarItem(
-          icon: PopupMenuButton(
-              onSelected: (int v) {
-                _popupSelect(context, v);
-              },
-              itemBuilder: (_) => [
-                    PopupMenuItem(
-                      child: Text("Create quiz"),
-                      value: 0,
-                    ),
-                  ],
-              child: Icon(Icons.add_circle)),
+          icon: Icon(Icons.add_circle),
           label: "Add",
         ),
         BottomNavigationBarItem(
@@ -52,7 +42,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         ),
       ],
       onTap: (int v) {
-        if (v == 1) return;
         setState(() {
           _currentIndex = v;
           widget.functionNavigate(_currentIndex);
