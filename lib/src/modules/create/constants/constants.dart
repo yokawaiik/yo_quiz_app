@@ -1,0 +1,1 @@
+const int MAX_ANSWERS_COUNT = 10;

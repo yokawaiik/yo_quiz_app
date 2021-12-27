@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yo_quiz_app/src/modules/create/models/answer.dart';
 
+import '../constants/constants.dart' as constants;
+
 class CreateQuestionScreen extends StatefulWidget {
   static const String routeName = "/create-question";
 
@@ -25,7 +27,37 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
   }
 
   void _addAnswer() {
-    // Todo:
+    if (_answers.length == constants.MAX_ANSWERS_COUNT) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("No more 10 answers")));
+    } else {
+      setState(() {
+      
+        _answers.add(Answer(id: UniqueKey().toString()));
+      });
+    }
+  }
+
+  void _toggleAnswer(int index) {
+    setState(() {
+      _answers[index].isRight = !_answers[index].isRight;
+    });
+  }
+
+  void _removeAnswer(String id) {
+    setState(() {
+      _answers.removeWhere((answer) => answer.id == id);
+    });
+  }
+
+  void _createQuestion() {
+    if (!_form.currentState!.validate()) return;
+
+    _form.currentState!.save();
+
+    // todo: create answer in provider
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -84,17 +116,75 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
                         )
                       : SizedBox.shrink(),
                 ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _answers.length,
+                  physics: ScrollPhysics(),
+                  itemBuilder: (_, i) => Container(
+                    key: Key(_answers[i].id),
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      initialValue: _answers[i].text,
+                      onChanged: (v) {
+                        _answers[i].text = v;
+                      },
+                      validator: (v) {
+                        if (v == null ||  v.isEmpty ) return "Answer must be fill.";
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Write this your answer $i",
+                        suffixIcon: SizedBox(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                color: _answers[i].isRight
+                                    ? Theme.of(context).colorScheme.secondary
+                                    : Theme.of(context).colorScheme.primary,
+                                icon: _answers[i].isRight
+                                    ? Icon(Icons.check)
+                                    : Icon(Icons.close),
+                                onPressed: () {
+                                  _toggleAnswer(i);
+                                },
+                              ),
+                              IconButton(
+                                color: Theme.of(context).colorScheme.primary,
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  _removeAnswer(_answers[i].id);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: ElevatedButton(
+                    onPressed: _addAnswer,
+                    child: Text(
+                      "Add Answer",
+                      style: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.headline6!.fontSize,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addAnswer,
-        child: Icon(Icons.question_answer),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _addAnswer,
+      //   child: Icon(Icons.question_answer),
+      // ),
     );
   }
-
-  
 }
