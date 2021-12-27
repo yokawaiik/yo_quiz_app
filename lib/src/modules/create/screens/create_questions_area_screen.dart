@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/screens/auth_wrapper_screen.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
+import 'package:yo_quiz_app/src/modules/create/screens/create_question_screen.dart';
 
 class CreateQuestionsAreaScreen extends StatefulWidget {
   static const String routeName = "/create-questions-area";
@@ -17,12 +18,20 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
   // todo: delete
   List<int> simpleList = [1, 2, 3];
 
-    void _closeCreateQuiz() {
-      Navigator.pushReplacementNamed(context, AuthWrapper.routeName);
-      Provider.of<CreateQuizProvider>(context, listen: false).cancelCreateQuiz();
-    }
+  void _closeCreateQuiz() {
+    Navigator.pushReplacementNamed(context, AuthWrapper.routeName);
+    Provider.of<CreateQuizProvider>(context, listen: false).cancelCreateQuiz();
+  }
 
-  
+  void _goBackToCreateQuestionScreen() {
+    Navigator.pop(context);
+  }
+
+
+
+  void _createQuestion() {
+    Navigator.of(context).pushNamed(CreateQuestionScreen.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +48,8 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
         ),
         Spacer(),
         IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.list),
+          onPressed: _goBackToCreateQuestionScreen,
+          icon: Icon(Icons.description)
         ),
       ],
       // iconTheme: IconThemeData(color: Colors.white),
@@ -49,7 +58,7 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-        _closeCreateQuiz();
+        _goBackToCreateQuestionScreen();
         return false;
       },
       child: Scaffold(
@@ -112,7 +121,7 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {  },
+          onPressed: _createQuestion,
           child: Icon(Icons.note_add),
         ),
       ),
