@@ -1,1 +1,2 @@
 const int MAX_ANSWERS_COUNT = 10;
+const int MAX_QUESTIONS_COUNT = 30;

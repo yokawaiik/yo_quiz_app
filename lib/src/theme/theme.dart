@@ -54,7 +54,17 @@ class MessengerTheme {
           foregroundColor: MaterialStateProperty.all<Color>(
             _onPrimary,
           ),
-          
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+          side: MaterialStateProperty.all(
+            BorderSide(
+              color: _primary,
+              width: 1.0,
+              style: BorderStyle.solid,
+            ),
+          ),
         ),
       ),
       checkboxTheme: CheckboxThemeData(

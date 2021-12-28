@@ -15,7 +15,8 @@ class AppQuiz extends StatelessWidget {
       providers: [
         Provider<AuthProvider>(create: (_) => AuthProvider()),
         Provider<UserProfileProvider>(create: (_) => UserProfileProvider()),
-        Provider<CreateQuizProvider>(create: (_) => CreateQuizProvider()),
+        // Provider<CreateQuizProvider>(create: (_) => CreateQuizProvider()),
+        ChangeNotifierProvider<CreateQuizProvider>(create: (_) => CreateQuizProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
