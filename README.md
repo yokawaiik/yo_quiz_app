@@ -9,16 +9,21 @@ profile:
 - [ ] user image
 - [ ] users tests
 
-quiz:
-- [ ] create quiz
+quiz create:
+- [x] create quiz
+- [x] timer in question
+- [x] create question
+- [x] update question
 - [ ] delete quiz
+- [ ] edit created quiz
 - [ ] share quiz
-- [ ] add code
-- [ ] timer in question
-- [ ] create question
+- [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
+
+quiz game:
+- [ ] screen question
 
 home page:
-- [ ] oficial tests
+- [ ] official tests
 
 other:
 - [ ] leaderboard

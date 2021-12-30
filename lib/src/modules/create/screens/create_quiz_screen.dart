@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/screens/auth_wrapper_screen.dart';
+import 'package:yo_quiz_app/src/modules/create/models/quiz.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
 import 'package:yo_quiz_app/src/modules/create/screens/create_questions_area_screen.dart';
 
@@ -17,8 +19,12 @@ class CreateQuizScreen extends StatefulWidget {
 }
 
 class _CreateQuizScreenState extends State<CreateQuizScreen> {
-  late bool _quizHasTimer;
-  File? _quizImage;
+  late bool _isQuizCreate;
+
+  // late bool _quizHasTimer;
+  // File? _quizImage;
+
+  late final Quiz _quiz;
 
   late final GlobalKey<FormState> _form;
 
@@ -26,7 +32,9 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
   void initState() {
     super.initState();
 
-    _quizHasTimer = false;
+    _isQuizCreate = false;
+    // _quizHasTimer = false;
+    _quiz = Quiz();
     _form = GlobalKey<FormState>();
   }
 
@@ -38,10 +46,8 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
 
     if (imagePicked == null) return;
 
-    // Todo: add image provider
-
     setState(() {
-      _quizImage = File(imagePicked.path);
+      _quiz.quizImage = File(imagePicked.path);
     });
   }
 
@@ -63,8 +69,28 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
     Provider.of<CreateQuizProvider>(context, listen: false).cancelCreateQuiz();
   }
 
-  void _createQuiz() {
+  void _createQuiz() async {
     // todo:
+    try {
+      setState(() {
+        _isQuizCreate = true;
+      });
+
+      await Provider.of<CreateQuizProvider>(context, listen: false)
+          .createQuiz(_quiz);
+
+      // clear Navigator and go to home screen
+      await Navigator.of(context).pushNamedAndRemoveUntil(
+        AuthWrapper.routeName,
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+    setState(() {
+      _isQuizCreate = false;
+    });
   }
 
   @override
@@ -89,7 +115,7 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
               onPressed: _closeCreateQuiz,
               icon: Icon(Icons.close),
             ),
-            Spacer(),
+            const Spacer(),
             IconButton(
               onPressed: _goToCreateQuestionsArea,
               icon: Icon(Icons.dashboard_customize),
@@ -98,7 +124,6 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
           // iconTheme: IconThemeData(color: Colors.white),
           elevation: 0.0,
         ),
-
         body: CustomScrollView(
           slivers: [
             SliverFillRemaining(
@@ -130,9 +155,9 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
                               height: device.height * (2 / 7),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
-                                child: _quizImage != null
+                                child: _quiz.quizImage != null
                                     ? Image.file(
-                                        _quizImage!,
+                                        _quiz.quizImage!,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                       )
@@ -143,11 +168,13 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
                                               .primary,
                                         ),
                                         child: Center(
-                                          child: Icon(Icons.image,
-                                              size: 100,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary),
+                                          child: Icon(
+                                            Icons.image,
+                                            size: 100,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
                                         ),
                                       ),
                               ),
@@ -158,6 +185,9 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
                           ),
                           TextFormField(
                             decoration: InputDecoration(labelText: "Title"),
+                            onChanged: (v) {
+                              _quiz.title = v;
+                            },
                             validator: (v) {
                               if (v == null || v.isEmpty)
                                 return "Field can not empty.";
@@ -171,6 +201,10 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            initialValue: _quiz.description,
+                            onChanged: (v) {
+                              _quiz.description = v;
+                            },
                             minLines: 1,
                             maxLines: 10,
                             decoration:
@@ -211,8 +245,12 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
                                 child: Text("Create questions"),
                               )
                             : ElevatedButton(
-                                onPressed: _createQuiz,
-                                child: Text("Create questions"),
+                                onPressed: !_isQuizCreate ? _createQuiz : null,
+                                child: !_isQuizCreate
+                                    ? Text("Create quiz")
+                                    : Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
                               ),
                       ),
                     ],
@@ -222,116 +260,6 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
             )
           ],
         ),
-
-        // body: SingleChildScrollView(
-        //   child: Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        //     child: Form(
-        //       key: _form,
-        //       child: Column(
-
-        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           Column(
-        //             mainAxisSize: MainAxisSize.min,
-        //             children: [
-        //               Text("Image for your quiz"),
-        //               SizedBox(
-        //                 height: 10,
-        //               ),
-        //               // Todo: add image
-        //               GestureDetector(
-        //                 onTap: () {
-        //                   _addQuizImage();
-        //                 },
-        //                 child: SizedBox(
-        //                   height: device.height * (2 / 7),
-        //                   child: ClipRRect(
-        //                     borderRadius: BorderRadius.circular(4),
-        //                     child: _quizImage != null
-        //                         ? Image.file(
-        //                             _quizImage!,
-        //                             fit: BoxFit.cover,
-        //                             width: double.infinity,
-        //                           )
-        //                         : Container(
-        //                             decoration: BoxDecoration(
-        //                               color: Theme.of(context)
-        //                                   .colorScheme
-        //                                   .primary,
-        //                             ),
-        //                             child: Center(
-        //                               child: Icon(Icons.image,
-        //                                   size: 100,
-        //                                   color: Theme.of(context)
-        //                                       .colorScheme
-        //                                       .onPrimary),
-        //                             ),
-        //                           ),
-        //                   ),
-        //                 ),
-        //               ),
-        //               SizedBox(
-        //                 height: 10,
-        //               ),
-        //               TextFormField(
-        //                 decoration: InputDecoration(labelText: "Title"),
-        //                 validator: (v) {
-        //                   if (v == null || v.isEmpty)
-        //                     return "Field can not empty.";
-        //                   if (v.length < 5 && v.length > 100)
-        //                     return "Field can not more 100 and less 5 letters.";
-
-        //                   return null;
-        //                 },
-        //               ),
-        //               SizedBox(
-        //                 height: 10,
-        //               ),
-        //               TextFormField(
-        //                 minLines: 1,
-        //                 maxLines: 10,
-        //                 decoration: InputDecoration(labelText: "Description"),
-        //                 validator: (v) {
-        //                   if (v == null || v.isEmpty)
-        //                     return "Field can not empty.";
-        //                   if (v.length < 5 || v.length > 200)
-        //                     return "Field can not more 200 and less 5 letters.";
-
-        //                   return null;
-        //                 },
-        //               ),
-        //               SizedBox(
-        //                 height: 10,
-        //               ),
-        //             ],
-        //           ),
-
-        //           // CheckboxListTile(
-        //           //   contentPadding: EdgeInsets.all(0),
-        //           //   controlAffinity: ListTileControlAffinity.leading,
-        //           //   title: Text("Does Quiz has been timer?"),
-        //           //   value: _quizHasTimer,
-        //           //   onChanged: (v) {
-        //           //     setState(() {
-        //           //       _quizHasTimer = v!;
-        //           //     });
-        //           //   },
-        //           // )
-
-        //           SizedBox(
-        //             width: double.infinity,
-        //             height: 50,
-        //             child: ElevatedButton(
-        //               onPressed: () {},
-        //               child: Text("Create questions"),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }

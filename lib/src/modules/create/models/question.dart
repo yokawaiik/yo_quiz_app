@@ -8,7 +8,7 @@ class Question {
   late List<Answer> answers;
   late int? secondsInTimer;
   late bool questionHasTimer;
-  
+
   Question({
     required this.id,
     required this.question,
@@ -16,4 +16,13 @@ class Question {
     this.questionHasTimer = false,
     this.secondsInTimer,
   });
+
+  List<Map> answersToListOfMap() {
+    return answers
+        .map((answer) => {
+              "text": answer.text,
+              "isRight": answer.isRight,
+            })
+        .toList();
+  }
 }
