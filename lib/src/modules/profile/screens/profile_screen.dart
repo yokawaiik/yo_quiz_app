@@ -3,11 +3,20 @@ import 'package:provider/src/provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/user_profile.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/user_profile_provider.dart';
+import 'package:yo_quiz_app/src/modules/profile/screens/created_quizzes_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = "/profile";
 
   const ProfileScreen({Key? key}) : super(key: key);
+
+  void _goToCreatedQuizzesScreen(
+      BuildContext context, UserProfile userProfile) {
+    Navigator.of(context).pushNamed(
+      CreatedQuizzesScreen.routeName,
+      arguments: userProfile,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +54,9 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icon(Icons.more_vert),
                   onSelected: (String i) {
                     switch (i) {
+                      case "1":
+                        _goToCreatedQuizzesScreen(context, userProfile);
+                        break;
                       case "0":
                         context.read<AuthProvider>().signOut();
                         break;
@@ -53,8 +65,8 @@ class ProfileScreen extends StatelessWidget {
                   itemBuilder: (ctx) => [
                     const PopupMenuItem(
                       value: "1",
-                      child: Text('My quiz'),
-                      enabled: false,
+                      child: Text('My created quizzes'),
+                      enabled: true,
                     ),
                     const PopupMenuItem(
                       value: "0",
@@ -143,8 +155,10 @@ class ProfileScreen extends StatelessWidget {
                       ListTile(
                         leading: Icon(Icons.library_books),
                         title: Text("Created quizzes"),
-                        subtitle: Text("Look at quizzes"),
-                        enabled: false,
+                        subtitle: Text("Look at created quizzes by user"),
+                        enabled: true,
+                        onTap: () =>
+                            _goToCreatedQuizzesScreen(context, userProfile),
                       ),
                       if (userProfile.isCurrentUser)
                         ListTile(
@@ -153,9 +167,10 @@ class ProfileScreen extends StatelessWidget {
                           subtitle: Text("Exit from app"),
                           onTap: () async {
                             Navigator.pop(context);
-                            await Provider.of<AuthProvider>(context,
-                                    listen: false)
-                                .signOut();
+                            await Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            ).signOut();
                           },
                         ),
                     ],

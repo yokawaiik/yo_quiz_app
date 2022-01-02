@@ -77,6 +77,7 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
     } else {
       setState(() {
         _currentScreen = _screenList[index]!;
+        
         _pageController.animateToPage(
           index,
           duration: const Duration(milliseconds: 300),

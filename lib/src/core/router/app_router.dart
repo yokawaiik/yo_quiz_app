@@ -4,6 +4,7 @@ import 'package:yo_quiz_app/src/modules/create/screens/create_question_screen.da
 import 'package:yo_quiz_app/src/modules/create/screens/create_questions_area_screen.dart';
 import 'package:yo_quiz_app/src/modules/create/screens/create_quiz_screen.dart';
 import 'package:yo_quiz_app/src/modules/main_navigator/screens/main_navigator_screen.dart';
+import 'package:yo_quiz_app/src/modules/profile/screens/created_quizzes_screen.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
 
 class AppRouter {
@@ -13,7 +14,9 @@ class AppRouter {
     AuthWrapper.routeName: (ctx) => const AuthWrapper(),
     AuthScreen.routeName: (ctx) => AuthScreen(),
     MainNavigatorScreen.routeName: (ctx) => MainNavigatorScreen(),
+
     ProfileScreen.routeName: (ctx) => ProfileScreen(),
+    CreatedQuizzesScreen.routeName: (ctx) => CreatedQuizzesScreen(),
 
     CreateQuizScreen.routeName: (ctx) => CreateQuizScreen(),
     CreateQuestionsAreaScreen.routeName: (ctx) => CreateQuestionsAreaScreen(),

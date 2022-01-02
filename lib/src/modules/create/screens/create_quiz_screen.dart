@@ -8,6 +8,7 @@ import 'package:yo_quiz_app/src/modules/auth/screens/auth_wrapper_screen.dart';
 import 'package:yo_quiz_app/src/modules/create/models/quiz.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
 import 'package:yo_quiz_app/src/modules/create/screens/create_questions_area_screen.dart';
+import 'package:yo_quiz_app/src/modules/profile/screens/created_quizzes_screen.dart';
 
 class CreateQuizScreen extends StatefulWidget {
   static const String routeName = "/create-quiz-screen";
@@ -84,6 +85,9 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
         AuthWrapper.routeName,
         (route) => false,
       );
+
+      await Navigator.of(context).pushNamed(CreatedQuizzesScreen.routeName);
+
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
