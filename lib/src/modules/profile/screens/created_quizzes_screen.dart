@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/created_quiz.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/user_profile.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/created_quizzes_provider.dart';
+import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class CreatedQuizzesScreen extends StatelessWidget {
   static const String routeName = "/created-quizzes";
@@ -10,6 +11,10 @@ class CreatedQuizzesScreen extends StatelessWidget {
   CreatedQuizzesScreen({Key? key}) : super(key: key);
 
   UserProfile? _userProfile;
+
+  void _openQuiz(BuildContext context, String id) {
+    Navigator.of(context).pushNamed(QuizMainScreen.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,27 +64,53 @@ class CreatedQuizzesScreen extends StatelessWidget {
                         children: [
                           // Text(createdQuizzes[i].description),
                           // Text(createdQuizzes[i].id),
-                          createdQuizzes[i].quizImage != null
-                              ? Image.network(
-                                  createdQuizzes[i].quizImage!,
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(
-                                  height: 200,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.quiz,
-                                      size: 100,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary,
+                          GestureDetector(
+                            onTap: () =>
+                                _openQuiz(context, createdQuizzes[i].id),
+                            child: Stack(
+                              children: [
+                                createdQuizzes[i].quizImage != null
+                                    ? Image.network(
+                                        createdQuizzes[i].quizImage!,
+                                        height: 200,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Container(
+                                        height: 200,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.quiz,
+                                            size: 100,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
+                                        ),
+                                      ),
+                                Positioned(
+                                  bottom: 10,
+                                  left: 10,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                    color:
+                                        Theme.of(context).colorScheme.background.withOpacity(0.6),
+                                    child: Text(
+                                      createdQuizzes[i].title,
+                                      style:TextStyle(
+                                        fontSize: Theme.of(context).textTheme.headline6!.fontSize,
+                                        color: Theme.of(context).colorScheme.onBackground,
+                                      )
+                                          
                                     ),
                                   ),
-                                ),
+                                )
+                              ],
+                            ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
