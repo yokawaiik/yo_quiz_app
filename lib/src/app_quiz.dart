@@ -5,10 +5,11 @@ import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/created_quizzes_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/user_profile_provider.dart';
+import 'package:yo_quiz_app/src/modules/quiz/provider/quiz_play_provider.dart';
 import 'package:yo_quiz_app/src/theme/theme.dart';
 
 class AppQuiz extends StatelessWidget {
-  const AppQuiz({ Key? key }) : super(key: key);
+  const AppQuiz({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,14 @@ class AppQuiz extends StatelessWidget {
       providers: [
         Provider<AuthProvider>(create: (_) => AuthProvider()),
         Provider<UserProfileProvider>(create: (_) => UserProfileProvider()),
-        Provider<CreatedQuizzesProvider>(create: (_) => CreatedQuizzesProvider()),
-        ChangeNotifierProvider<CreateQuizProvider>(create: (_) => CreateQuizProvider()),
+        Provider<CreatedQuizzesProvider>(
+            create: (_) => CreatedQuizzesProvider()),
+
+        Provider<QuizPlayProvider>(create: (_) => QuizPlayProvider()),
+
+
+        ChangeNotifierProvider<CreateQuizProvider>(
+            create: (_) => CreateQuizProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

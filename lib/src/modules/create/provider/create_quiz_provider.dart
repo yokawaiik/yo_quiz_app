@@ -64,7 +64,7 @@ class CreateQuizProvider extends ChangeNotifier {
           "answers": item.answersToListOfMap(),
         });
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       var message = "Database error";
 
       throw ApiException(message);

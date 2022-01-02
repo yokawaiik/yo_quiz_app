@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/created_quiz.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/user_profile.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/created_quizzes_provider.dart';
@@ -13,7 +14,7 @@ class CreatedQuizzesScreen extends StatelessWidget {
   UserProfile? _userProfile;
 
   void _openQuiz(BuildContext context, String id) {
-    Navigator.of(context).pushNamed(QuizMainScreen.routeName);
+    Navigator.of(context).pushNamed(QuizMainScreen.routeName, arguments: id);
   }
 
   @override
@@ -55,7 +56,7 @@ class CreatedQuizzesScreen extends StatelessWidget {
               return Container(
                 padding: EdgeInsets.symmetric(vertical: 4),
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  padding: EdgeInsets.symmetric(horizontal: 8),
                   itemCount: createdQuizzes.length,
                   itemBuilder: (_, i) => Card(
                     child: ClipRRect(
@@ -69,43 +70,27 @@ class CreatedQuizzesScreen extends StatelessWidget {
                                 _openQuiz(context, createdQuizzes[i].id),
                             child: Stack(
                               children: [
-                                createdQuizzes[i].quizImage != null
-                                    ? Image.network(
-                                        createdQuizzes[i].quizImage!,
-                                        height: 200,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Container(
-                                        height: 200,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.quiz,
-                                            size: 100,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                          ),
-                                        ),
-                                      ),
+                                QuizImage(createdQuizzes[i].quizImage),
                                 Positioned(
                                   bottom: 10,
                                   left: 10,
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                    color:
-                                        Theme.of(context).colorScheme.background.withOpacity(0.6),
-                                    child: Text(
-                                      createdQuizzes[i].title,
-                                      style:TextStyle(
-                                        fontSize: Theme.of(context).textTheme.headline6!.fontSize,
-                                        color: Theme.of(context).colorScheme.onBackground,
-                                      )
-                                          
-                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background
+                                        .withOpacity(0.6),
+                                    child: Text(createdQuizzes[i].title,
+                                        style: TextStyle(
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .fontSize,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
+                                        )),
                                   ),
                                 )
                               ],
