@@ -1,16 +1,18 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class QuizPlay {
   late final String id;
   late final String title;
   late final String description;
   late final int questionCount;
-  late final Timestamp created;
+  late final String created;
 
   late final String? quizImage;
   //Scope scope;
   //bool timer;
+  
 
   QuizPlay({
     required this.id,
@@ -29,7 +31,8 @@ class QuizPlay {
     title = data["title"];
     description = data["description"];
     questionCount = data["questionCount"];
-    created = data["created"];
+    created = DateFormat("MM/dd/yyyy").format(DateTime
+    .fromMillisecondsSinceEpoch((data["created"] as Timestamp).millisecondsSinceEpoch));
 
     quizImage = data["quizImage"];
   }
