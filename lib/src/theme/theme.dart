@@ -11,6 +11,9 @@ const _secondary = Color(0xff4db6ac);
 const _secondaryDark = Color(0xff00867d);
 const _secondaryLight = Color(0xff82e9de);
 
+const _background = Color(0xfffff176);
+const _onBackground = Colors.black;
+
 class MessengerTheme {
   final themeLight = ThemeData(
       colorScheme: ColorScheme(
@@ -19,12 +22,12 @@ class MessengerTheme {
         secondary: _secondary,
         secondaryVariant: _secondaryDark,
         surface: Color(0xffffffff),
-        background: Color(0xffc7d7c1),
+        background: _background,
         error: Color(0xffd32f2f),
         onPrimary: _onPrimary,
         onSecondary: Color(0xffffffff),
         onSurface: Color(0xff000000),
-        onBackground: Color(0xff000000),
+        onBackground: _onBackground,
         onError: Color(0xffffffff),
         brightness: Brightness.light,
       ),

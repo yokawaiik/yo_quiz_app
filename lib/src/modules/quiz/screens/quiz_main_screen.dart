@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yo_quiz_app/src/core/models/quiz_play.dart';
+import 'package:yo_quiz_app/src/modules/quiz/models/game_quiz.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
 import 'package:yo_quiz_app/src/modules/quiz/provider/quiz_play_provider.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/question_play_screen.dart';
+import 'package:yo_quiz_app/src/modules/quiz/widgets/expanded_elevated_button.dart';
 import 'package:yo_quiz_app/src/modules/quiz/widgets/text_description.dart';
 
 class QuizMainScreen extends StatelessWidget {
@@ -39,15 +40,11 @@ class QuizMainScreen extends StatelessWidget {
 
     void _startTheQuiz(BuildContext context) {
       Navigator.of(context).pushNamed(QuestionPlayScreen.routeName);
-      
-      // Todo: start in provider
-
     }
 
     return Scaffold(
       appBar: appBar,
-
-      body: FutureBuilder<QuizPlay?>(
+      body: FutureBuilder<GameQuiz?>(
         future: Provider.of<QuizPlayProvider>(context).loadQuiz(quizId),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -133,22 +130,9 @@ class QuizMainScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed:() => _startTheQuiz(context),
-                        child: Center(
-                          child: Text(
-                            "Start quiz",
-                            style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .fontSize),
-                          ),
-                        ),
-                      ),
+                    child: ExpandedElevatedButton(
+                      text: "Start quiz",
+                      onPressed: () => _startTheQuiz(context),
                     ),
                   ),
                 ],
@@ -160,3 +144,4 @@ class QuizMainScreen extends StatelessWidget {
     );
   }
 }
+

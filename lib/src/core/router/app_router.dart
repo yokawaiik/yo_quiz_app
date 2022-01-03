@@ -8,6 +8,7 @@ import 'package:yo_quiz_app/src/modules/profile/screens/created_quizzes_screen.d
 import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/question_play_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
+import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_results_screen.dart';
 
 class AppRouter {
   
@@ -26,6 +27,7 @@ class AppRouter {
 
     QuizMainScreen.routeName: (ctx) => QuizMainScreen(),
     QuestionPlayScreen.routeName: (ctx) => QuestionPlayScreen(),
+    QuizResultsScreen.routeName: (ctx) => QuizResultsScreen(),
   };
 
   static const initialRoute = AuthWrapper.routeName;
