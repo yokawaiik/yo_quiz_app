@@ -7,7 +7,7 @@ Flutter project: quiz.
 profile:
 - [x] show userProfile
 - [ ] user image
-- [ ] users tests
+- [x] users tests
 
 quiz create:
 - [x] create quiz
@@ -20,6 +20,7 @@ quiz create:
 - [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
 
 quiz game:
+- [x] quiz main (description) screen
 - [ ] screen question
 
 home page:
