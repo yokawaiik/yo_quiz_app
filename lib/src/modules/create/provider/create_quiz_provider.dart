@@ -111,5 +111,7 @@ class CreateQuizProvider extends ChangeNotifier {
 
   void cancelCreateQuiz() {
     // Todo: clearing all data
+
+    _questions.clear();
   }
 }

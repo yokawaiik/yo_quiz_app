@@ -8,24 +8,43 @@ class QuizPlayProvider {
   final _db = FirebaseFirestore.instance;
   QuizPlay? _quizPlay;
 
+  
   int? _currentQuestion;
   // todo: add model for answer (userAnswer)
 
-  Stream<QuizPlay>? get quizPlay {
-    if (_quizPlay == null) {
-      return null;
-    } else {
-      return Stream.value(_quizPlay!);
+  void startQuiz() {
+    _currentQuestion = 1;
+  }
+  void closeQuiz() {
+    _quizPlay = null;
+    _currentQuestion = null;
+  }
+
+  int? get currentQuestion => _currentQuestion;
+
+  void nextQuestion() {
+    if (_currentQuestion! < _quizPlay!.questionCount) {
+      _currentQuestion = _currentQuestion! + 1;
     }
   }
 
-  Future<void> loadQuiz(String id) async {
+
+
+  // Stream<QuizPlay?> get quizPlay {
+  //   if (_quizPlay == null) {
+  //     return Stream.value(null);
+  //   } else {
+  //     return Stream.value(_quizPlay!);
+  //   }
+  // }
+
+  Future<QuizPlay?> loadQuiz(String id) async {
     try {
       final snapshot = await _db.collection("quizzes").doc(id).get();
 
       _quizPlay = QuizPlay.fromDoc(snapshot);
 
-
+      return _quizPlay;
     } on FirebaseException catch (e) {
       var message = "Firebase db error.";
 
@@ -33,7 +52,7 @@ class QuizPlayProvider {
     } catch (e) {
       throw UnknownException(e.toString());
     }
-
-
   }
+
+
 }
