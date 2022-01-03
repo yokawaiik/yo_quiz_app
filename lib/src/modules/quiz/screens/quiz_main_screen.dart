@@ -45,7 +45,7 @@ class QuizMainScreen extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       body: FutureBuilder<GameQuiz?>(
-        future: Provider.of<QuizPlayProvider>(context).loadQuiz(quizId),
+        future: Provider.of<QuizPlayProvider>(context, listen: false).loadQuiz(quizId),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

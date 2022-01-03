@@ -4,7 +4,9 @@ import 'package:yo_quiz_app/src/modules/quiz/models/game_answer.dart';
 class GameQuestion {
   late final String id;
   late final String question;
-  late List<GameAnswer> answers;
+
+  late final List<GameAnswer> answers;
+
   late final bool? timer;
   late final int? secondsInTimer;
 
@@ -25,5 +27,15 @@ class GameQuestion {
     answers = (data["answers"] as List<dynamic>)
         .map((item) => GameAnswer.fromListOfMap(item))
         .toList();
+
+    
+  }
+
+  void clearSelectAnswers() {
+    
+    for (var answer in answers) { 
+      answer.clear();
+    }
+    
   }
 }

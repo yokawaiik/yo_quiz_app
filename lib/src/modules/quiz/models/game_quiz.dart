@@ -44,4 +44,12 @@ class GameQuiz {
         docQuestions.docs.map((doc) => GameQuestion.fromDoc(doc)).toList();
 
   }
+
+  void clearAnswers() {
+    print(" GameQuiz clearUserAnswers");
+    
+    for (var question in questions) {
+      question.clearSelectAnswers();
+    }
+  }
 }

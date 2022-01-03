@@ -23,10 +23,14 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
   }
 
   void _nextQuestion(bool isCurrentQuestionLast) {
+    final quizPlayProvider =
+        Provider.of<QuizPlayProvider>(context, listen: false);
+
     if (isCurrentQuestionLast) {
       Navigator.of(context).pushReplacementNamed(QuizResultsScreen.routeName);
+      quizPlayProvider.finishQuiz();
     } else {
-      Provider.of<QuizPlayProvider>(context, listen: false).nextQuestion();
+      quizPlayProvider.nextQuestion();
     }
   }
 
@@ -46,6 +50,7 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
             onPressed: () {
               Navigator.of(context).popUntil(
                   (route) => route.settings.name == QuizMainScreen.routeName);
+              Provider.of<QuizPlayProvider>(context, listen: false).closeQuiz();
             },
             child: Text("Yes"),
           ),
@@ -60,11 +65,11 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentQuestion =
-        Provider.of<QuizPlayProvider>(context, listen: true).currentQuestion!;
-    final isCurrentQuestionLast =
-        Provider.of<QuizPlayProvider>(context, listen: true)
-            .isCurrentQuestionLast!;
+    final quizPlayProvider =
+        Provider.of<QuizPlayProvider>(context, listen: true);
+
+    final currentQuestion = quizPlayProvider.currentQuestion!;
+    final isCurrentQuestionLast = quizPlayProvider.isCurrentQuestionLast!;
 
     return WillPopScope(
       onWillPop: () async {
@@ -128,7 +133,9 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
                             // color: !answer.isUserAnswer
                             //     ? Theme.of(context)
                             //         .colorScheme
@@ -149,7 +156,7 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
                               }
                             })(),
                             child: Text(
-                              "${answer.text} ${answer.isUserAnswer}",
+                              answer.text,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
                                 fontSize: Theme.of(context)

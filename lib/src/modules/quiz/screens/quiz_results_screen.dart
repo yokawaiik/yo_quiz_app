@@ -13,43 +13,66 @@ class QuizResultsScreen extends StatelessWidget {
   void _closeQuiz(BuildContext context) {
     Navigator.of(context)
         .popUntil((route) => route.settings.name == QuizMainScreen.routeName);
+    Provider.of<QuizPlayProvider>(context, listen: false).closeQuiz();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TransparentAppBar(
-        closeAction: () => _closeQuiz(context),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: FutureBuilder<GameResults?>(
-          future: Provider.of<QuizPlayProvider>(context, listen: false).finishQuiz(),
-          builder: (_, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(),);
-            }
+    // final gameResults =
+    //     Provider.of<QuizPlayProvider>(context, listen: true).gameResults;
 
+    // print(gameResults);
 
-            final results = snapshot.data!;
-
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+    return WillPopScope(
+      onWillPop: () async {
+        _closeQuiz(context);
+        return false;
+      },
+      child: Scaffold(
+        appBar: TransparentAppBar(
+          closeAction: () => _closeQuiz(context),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: FutureBuilder<GameResults>(
+            future: Provider.of<QuizPlayProvider>(context, listen: false)
+                .finishQuiz(),
+            builder: (_, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                final results = snapshot.data!;
+    
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(results.rightAnswers.toString()),
-                    Text(results.wrongAnswers.toString()),
-                    Text(results.notAnswered.toString()),
-                    Text(results.totalQuestions.toString()),
-                    Text(results.timestamp.toString()),
+                    Column(
+                      children: [
+                        Text(results.rightAnswers.toString()),
+                        Text(results.wrongAnswers.toString()),
+                        Text(results.notAnswered.toString()),
+                        Text(results.rating.toString()),
+                        Text(results.totalAnswers.toString()),
+                        Text(results.timestamp.toString()),
+                      ],
+                    ),
+                    ExpandedElevatedButton(
+                        text: "Finish", onPressed: () => _closeQuiz(context)),
                   ],
-                ),
-                ExpandedElevatedButton(
-                    text: "Finish", onPressed: () => _closeQuiz(context)),
-              ],
-            );
-          }
+                );
+              } else {
+                return Center(
+                  child: Icon(
+                    Icons.error,
+                    size: 200,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

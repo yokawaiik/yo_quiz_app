@@ -7,7 +7,6 @@ class GameAnswer {
   GameAnswer({
     required this.text,
     required this.isRight,
-
     this.isUserAnswer = false,
   });
 
@@ -18,8 +17,11 @@ class GameAnswer {
     isUserAnswer = false;
   }
 
-  toggleSelect() {
+  void toggleSelect() {
     isUserAnswer = !isUserAnswer;
-    print("toggleSelect - now $isUserAnswer");
+  }
+
+  void clear() {
+    isUserAnswer = false;
   }
 }
