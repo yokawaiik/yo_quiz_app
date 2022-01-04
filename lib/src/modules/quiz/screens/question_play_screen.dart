@@ -5,6 +5,7 @@ import 'package:yo_quiz_app/src/modules/quiz/provider/quiz_play_provider.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_results_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/widgets/expanded_elevated_button.dart';
+import 'package:yo_quiz_app/src/modules/quiz/widgets/question_attempt_counter.dart';
 
 class QuestionPlayScreen extends StatefulWidget {
   static const String routeName = "/question-play";
@@ -85,6 +86,13 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
             children: [
               Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      QuestionAttemptCounter(
+                          attemptAnswers: currentQuestion.attemptAnswers!)
+                    ],
+                  ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Container(

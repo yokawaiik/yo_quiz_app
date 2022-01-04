@@ -52,12 +52,18 @@ class QuizPlayProvider extends ChangeNotifier {
   }
 
   void selectAnswer(int index) {
-    print("selectAnswer index $index");
+    // print("selectAnswer index $index");
 
-    _quizPlay!.questions[_currentQuestionIndex!].answers[index].toggleSelect();
-    // _quizPlay!.questions[_currentQuestionIndex!].answers[index].isUserAnswer = true;
+    final currentQuestion = _quizPlay!.questions[_currentQuestionIndex!];
 
-    notifyListeners();
+    if (currentQuestion.attemptAnswers! > 0) {
+
+      currentQuestion.answers[index].toggleSelect();
+      currentQuestion.removeAttempt();
+
+      notifyListeners();
+    }
+    
   }
 
   Future<GameQuiz?> loadQuiz(String id) async {

@@ -52,6 +52,11 @@ class CreateQuizProvider extends ChangeNotifier {
       // create quiz nested collection "questions"
 
       for (var item in _questions) {
+        int rightAnswers = 0;
+        for (var answer in item.answers) {
+          if (answer.isRight) rightAnswers++;
+        }
+
         await _db
             .collection("quizzes")
             .doc(quizCredential.id)
@@ -62,6 +67,7 @@ class CreateQuizProvider extends ChangeNotifier {
           "secondsInTimer": item.secondsInTimer,
           "timer": item.questionHasTimer,
           "answers": item.answersToListOfMap(),
+          "rightAnswers": rightAnswers,
         });
       }
     } on FirebaseException catch (e) {

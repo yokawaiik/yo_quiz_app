@@ -5,6 +5,8 @@ import 'package:yo_quiz_app/src/modules/quiz/models/game_results.dart';
 import 'package:yo_quiz_app/src/modules/quiz/provider/quiz_play_provider.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/widgets/expanded_elevated_button.dart';
+import 'package:yo_quiz_app/src/modules/quiz/widgets/result_rating.dart';
+import 'package:yo_quiz_app/src/modules/quiz/widgets/text_description.dart';
 
 class QuizResultsScreen extends StatelessWidget {
   static const String routeName = "/quiz-results";
@@ -44,18 +46,49 @@ class QuizResultsScreen extends StatelessWidget {
                 );
               } else if (snapshot.hasData) {
                 final results = snapshot.data!;
-    
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
+                 
                       children: [
-                        Text(results.rightAnswers.toString()),
-                        Text(results.wrongAnswers.toString()),
-                        Text(results.notAnswered.toString()),
-                        Text(results.rating.toString()),
-                        Text(results.totalAnswers.toString()),
-                        Text(results.timestamp.toString()),
+                        ResultRating(rating: results.rating),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            children: [
+                              TextDescription(
+                                title: "Right Answers",
+                                description: results.rightAnswers.toString(),
+                              ),
+                              TextDescription(
+                                title: "Wrong Answers",
+                                description: results.wrongAnswers.toString(),
+                              ),
+                              TextDescription(
+                                title: "Not Answered",
+                                description: results.notAnswered.toString(),
+                              ),
+                              TextDescription(
+                                title: "Total Answers",
+                                description: results.totalAnswers.toString(),
+                              ),
+                              TextDescription(
+                                title: "Date",
+                                description: results.date,
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                     ExpandedElevatedButton(

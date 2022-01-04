@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class GameResults {
   late final int rightAnswers;
@@ -9,6 +10,10 @@ class GameResults {
 
   late final Timestamp timestamp;
 
+
+  String get date {
+    return DateFormat("D/M/yyyy HH:mm").format(DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch));
+  }
 
   GameResults({
     required this.rightAnswers,
