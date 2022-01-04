@@ -4,9 +4,12 @@ import 'package:yo_quiz_app/src/modules/home/models/available_quiz.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class QuizCard extends StatelessWidget {
-  const QuizCard({
+  Function? onLongPress;
+
+  QuizCard({
     Key? key,
     required this.quiz,
+    this.onLongPress,
   }) : super(key: key);
 
   final AvailableQuiz quiz;
@@ -15,10 +18,10 @@ class QuizCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(
-            QuizMainScreen.routeName,
-            arguments: quiz.id);
+        Navigator.of(context)
+            .pushNamed(QuizMainScreen.routeName, arguments: quiz.id);
       },
+      onLongPress: onLongPress != null ? () => onLongPress!() : null,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Column(

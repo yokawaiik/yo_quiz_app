@@ -66,27 +66,46 @@ class HomeProvider {
             .toList());
   }
 
-  Future<List<AvailableQuiz>> loadAvailableQuizzes(
-      {bool isRefresh = false}) async {
-    try {
-      if (_isFirstLoad && !isRefresh) return quizzes;
-      print("refresh");
+  // Future<List<AvailableQuiz>> loadAvailableQuizzes(
+  //     {bool isRefresh = false}) async {
+  //   try {
+  //     if (_isFirstLoad && !isRefresh) return quizzes;
+  //     print("refresh");
 
-      final snapshot = await _db
+  //     final snapshot = await _db
+  //         .collection("users")
+  //         .doc(_auth.currentUser!.uid)
+  //         .collection("recievedQuizzes")
+  //         .orderBy("created", descending: true)
+  //         .get();
+
+  //     // _quizzes = [];
+  //     _quizzes = snapshot.docs
+  //         .map((doc) => AvailableQuiz.fromDoc(_auth.currentUser!.uid, doc))
+  //         .toList();
+
+  //     _isFirstLoad = true;
+
+  //     return quizzes;
+  //   } on FirebaseException catch (e) {
+  //     var message = "Database error";
+  //     throw ApiException(message);
+  //   } catch (e) {
+  //     print("getQuiz $e");
+  //     var message = "Unknown exception";
+
+  //     throw UnknownException(message);
+  //   }
+  // }
+
+  Future<void> removeQuiz(String id) async {
+    try {
+      await _db
           .collection("users")
           .doc(_auth.currentUser!.uid)
           .collection("recievedQuizzes")
-          .orderBy("created", descending: true)
-          .get();
-
-      // _quizzes = [];
-      _quizzes = snapshot.docs
-          .map((doc) => AvailableQuiz.fromDoc(_auth.currentUser!.uid, doc))
-          .toList();
-
-      _isFirstLoad = true;
-
-      return quizzes;
+          .doc(id)
+          .delete();
     } on FirebaseException catch (e) {
       var message = "Database error";
       throw ApiException(message);
