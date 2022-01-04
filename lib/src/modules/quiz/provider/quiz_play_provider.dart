@@ -10,6 +10,8 @@ import 'package:yo_quiz_app/src/modules/quiz/models/game_results.dart';
 
 class QuizPlayProvider extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+
   GameQuiz? _quizPlay;
 
   GameResults? _gameResults;
@@ -40,6 +42,7 @@ class QuizPlayProvider extends ChangeNotifier {
   void closeQuiz() {
     _quizPlay!.clearAnswers();
     _currentQuestionIndex = null;
+    _gameResults = null;
   }
 
   void nextQuestion() {
@@ -52,18 +55,14 @@ class QuizPlayProvider extends ChangeNotifier {
   }
 
   void selectAnswer(int index) {
-    // print("selectAnswer index $index");
-
     final currentQuestion = _quizPlay!.questions[_currentQuestionIndex!];
 
     if (currentQuestion.attemptAnswers! > 0) {
-
       currentQuestion.answers[index].toggleSelect();
       currentQuestion.removeAttempt();
 
       notifyListeners();
     }
-    
   }
 
   Future<GameQuiz?> loadQuiz(String id) async {
@@ -75,6 +74,8 @@ class QuizPlayProvider extends ChangeNotifier {
           await _db.collection("quizzes").doc(id).collection("questions").get();
 
       _quizPlay = GameQuiz.fromDoc(snapshotQuiz, snapshotQuestions);
+
+      
 
       return _quizPlay;
     } on FirebaseException catch (e) {
@@ -88,6 +89,7 @@ class QuizPlayProvider extends ChangeNotifier {
 
   Future<GameResults> finishQuiz() async {
     try {
+      final timestamp = Timestamp.now();
       int totalAnswers = 0;
 
       int rightAnswers = 0;
@@ -99,7 +101,6 @@ class QuizPlayProvider extends ChangeNotifier {
           if (answer.isRight) {
             totalAnswers++;
           }
-          print("${answer.isRight},  ${answer.isUserAnswer}");
           if (answer.isRight && answer.isUserAnswer) {
             rightAnswers++;
           } else if (!answer.isRight && answer.isUserAnswer) {
@@ -109,14 +110,28 @@ class QuizPlayProvider extends ChangeNotifier {
           }
         }
       }
-      // todo: write to _db
+
       int rating;
-      print("rightAnswers $rightAnswers");
       if (rightAnswers.isNaN || rightAnswers.isInfinite || rightAnswers == 0) {
         rating = 0;
       } else {
         rating = ((rightAnswers / totalAnswers) * 100).toInt();
       }
+
+      await _db
+          .collection("quizzes")
+          .doc(_quizPlay!.id)
+          .collection("results")
+          .doc(_auth.currentUser!.uid)
+          .set({
+        "uid": _auth.currentUser!.uid,
+        "rightAnswers": rightAnswers,
+        "wrongAnswers": wrongAnswers,
+        "notAnswered": notAnswered,
+        "totalAnswers": totalAnswers,
+        "rating": rating,
+        "timestamp": timestamp,
+      });
 
       _gameResults = GameResults(
         rightAnswers: rightAnswers,
@@ -124,7 +139,7 @@ class QuizPlayProvider extends ChangeNotifier {
         notAnswered: notAnswered,
         totalAnswers: totalAnswers,
         rating: rating,
-        timestamp: Timestamp.now(),
+        timestamp: timestamp,
       );
 
       return _gameResults!;

@@ -21,7 +21,9 @@ quiz create:
 
 quiz game:
 - [x] quiz main (description) screen
-- [ ] screen question
+- [x] screen question
+- [x] screen results
+- [ ] previous result
 
 home page:
 - [ ] official tests
