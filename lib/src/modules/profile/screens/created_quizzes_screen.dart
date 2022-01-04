@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/created_quiz.dart';
@@ -8,6 +9,7 @@ import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class CreatedQuizzesScreen extends StatelessWidget {
   static const String routeName = "/created-quizzes";
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   CreatedQuizzesScreen({Key? key}) : super(key: key);
 
@@ -17,11 +19,20 @@ class CreatedQuizzesScreen extends StatelessWidget {
     Navigator.of(context).pushNamed(QuizMainScreen.routeName, arguments: id);
   }
 
+  Future<void> _shareQuiz(String id) async {
+    await Clipboard.setData(ClipboardData(text: id));
+    ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
+        .showSnackBar(SnackBar(
+      content: Text('Code Copied to clipboard'),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     _userProfile ??= ModalRoute.of(context)!.settings.arguments as UserProfile;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Created quizzes by user"),
       ),
@@ -100,7 +111,8 @@ class CreatedQuizzesScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                onPressed: null,
+                                onPressed: () =>
+                                    _shareQuiz(createdQuizzes[i].id),
                                 icon: Icon(Icons.share),
                               ),
                               // IconButton(
