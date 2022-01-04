@@ -4,7 +4,9 @@ import 'package:yo_quiz_app/src/core/widgets/transparent_app_bar.dart';
 import 'package:yo_quiz_app/src/modules/quiz/provider/quiz_play_provider.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_results_screen.dart';
+import 'package:yo_quiz_app/src/modules/quiz/widgets/answers_area.dart';
 import 'package:yo_quiz_app/src/modules/quiz/widgets/expanded_elevated_button.dart';
+import 'package:yo_quiz_app/src/modules/quiz/widgets/question_area.dart';
 import 'package:yo_quiz_app/src/modules/quiz/widgets/question_attempt_counter.dart';
 
 class QuestionPlayScreen extends StatefulWidget {
@@ -79,114 +81,49 @@ class _QuestionPlayScreenState extends State<QuestionPlayScreen> {
       },
       child: Scaffold(
         appBar: TransparentAppBar(closeAction: _showModalDialogCloseQuiz),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        body: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      QuestionAttemptCounter(
-                          attemptAnswers: currentQuestion.attemptAnswers!)
-                    ],
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      color: Theme.of(context).colorScheme.background,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        child: Row(
-                          children: [
-                            Text(
-                              currentQuestion.question,
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .fontSize,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  ListView.separated(
-                    separatorBuilder: (_, __) {
-                      return const SizedBox(
-                        height: 20,
-                      );
-                    },
-                    // padding: EdgeInsets.all(10),
-                    shrinkWrap: true,
-                    itemCount: currentQuestion.answers.length,
-                    itemBuilder: (_, int i) {
-                      // print("ListView.separated ${currentQuestion.answers[i].isUserAnswer}");
-                      final answer = currentQuestion.answers[i];
-
-                      return GestureDetector(
-                        key: Key(i.toString()),
-                        onTap:
-                            answer.isUserAnswer ? null : () => _selectAnswer(i),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
-                            ),
-                            // color: !answer.isUserAnswer
-                            //     ? Theme.of(context)
-                            //         .colorScheme
-                            //         .primary
-                            //         .withOpacity(0.5)
-                            //     : Theme.of(context).colorScheme.primary,
-                            color: (() {
-                              if (answer.isUserAnswer && !answer.isRight) {
-                                return Colors.red;
-                              } else if (answer.isUserAnswer &&
-                                  answer.isRight) {
-                                return Colors.green;
-                              } else {
-                                return Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.5);
-                              }
-                            })(),
-                            child: Text(
-                              answer.text,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .fontSize,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  QuestionAttemptCounter(
+                      attemptAnswers: currentQuestion.attemptAnswers!)
                 ],
               ),
-              ExpandedElevatedButton(
-                text: isCurrentQuestionLast ? "Results" : "Next question",
-                onPressed: () => _nextQuestion(isCurrentQuestionLast),
+              QuestionArea(question: currentQuestion.question),
+              SizedBox(
+                height: 40,
+              ),
+              AnswersArea(
+                answers: currentQuestion.answers,
+                selectAnswer: _selectAnswer,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  bottom: 10,
+                ),
+                child: ExpandedElevatedButton(
+                  text: isCurrentQuestionLast ? "Results" : "Next question",
+                  onPressed: () => _nextQuestion(isCurrentQuestionLast),
+                ),
               ),
             ],
           ),
         ),
+        // floatingActionButton: FloatingActionButton.extended(
+
+        //   onPressed: () => _nextQuestion(isCurrentQuestionLast),
+        //   label: Text(isCurrentQuestionLast ? "Results" : "Next question"),
+        // ),
+
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

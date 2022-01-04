@@ -64,69 +64,66 @@ class CreatedQuizzesScreen extends StatelessWidget {
 
               final createdQuizzes = snapshot.data!;
 
-              return Container(
-                padding: EdgeInsets.symmetric(vertical: 4),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  itemCount: createdQuizzes.length,
-                  itemBuilder: (_, i) => Card(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Column(
-                        children: [
-                          // Text(createdQuizzes[i].description),
-                          // Text(createdQuizzes[i].id),
-                          GestureDetector(
-                            onTap: () =>
-                                _openQuiz(context, createdQuizzes[i].id),
-                            child: Stack(
-                              children: [
-                                QuizImage(createdQuizzes[i].quizImage),
-                                Positioned(
-                                  bottom: 10,
-                                  left: 10,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 10),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background
-                                        .withOpacity(0.6),
-                                    child: Text(createdQuizzes[i].title,
-                                        style: TextStyle(
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .headline6!
-                                              .fontSize,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground,
-                                        )),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                itemCount: createdQuizzes.length,
+                itemBuilder: (_, i) => Card(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Column(
+                      children: [
+                        // Text(createdQuizzes[i].description),
+                        // Text(createdQuizzes[i].id),
+                        GestureDetector(
+                          onTap: () =>
+                              _openQuiz(context, createdQuizzes[i].id),
+                          child: Stack(
                             children: [
-                              IconButton(
-                                onPressed: () =>
-                                    _shareQuiz(createdQuizzes[i].id),
-                                icon: Icon(Icons.share),
-                              ),
-                              // IconButton(
-                              //   onPressed: null,
-                              //   icon: Icon(Icons.edit),
-                              // ),
-                              IconButton(
-                                onPressed: null,
-                                icon: Icon(Icons.delete),
-                              ),
+                              QuizImage(createdQuizzes[i].quizImage),
+                              Positioned(
+                                bottom: 10,
+                                left: 10,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .background
+                                      .withOpacity(0.6),
+                                  child: Text(createdQuizzes[i].title,
+                                      style: TextStyle(
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .fontSize,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                      )),
+                                ),
+                              )
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () =>
+                                  _shareQuiz(createdQuizzes[i].id),
+                              icon: Icon(Icons.share),
+                            ),
+                            // IconButton(
+                            //   onPressed: null,
+                            //   icon: Icon(Icons.edit),
+                            // ),
+                            IconButton(
+                              onPressed: null,
+                              icon: Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),

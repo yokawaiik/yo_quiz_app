@@ -166,7 +166,7 @@ class ProfileScreen extends StatelessWidget {
                           title: Text("Logout"),
                           subtitle: Text("Exit from app"),
                           onTap: () async {
-                            Navigator.pop(context);
+                            
                             await Provider.of<AuthProvider>(
                               context,
                               listen: false,
