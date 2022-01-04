@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/core/router/app_router.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
+import 'package:yo_quiz_app/src/modules/home/provider/home_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/created_quizzes_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/user_profile_provider.dart';
 import 'package:yo_quiz_app/src/modules/quiz/provider/quiz_play_provider.dart';
@@ -21,9 +22,10 @@ class AppQuiz extends StatelessWidget {
             create: (_) => CreatedQuizzesProvider()),
         ChangeNotifierProvider<CreateQuizProvider>(
             create: (_) => CreateQuizProvider()),
-
-        // Provider<QuizPlayProvider>(create: (_) => QuizPlayProvider()),
         ChangeNotifierProvider<QuizPlayProvider>(create: (_) => QuizPlayProvider()),
+
+        Provider<HomeProvider>(
+            create: (_) => HomeProvider()),
 
       ],
       child: MaterialApp(

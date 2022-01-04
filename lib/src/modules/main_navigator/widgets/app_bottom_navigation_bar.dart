@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:yo_quiz_app/src/modules/create/screens/create_quiz_screen.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
 
+import '../constants/constants.dart' as constants;
+
 class AppBottomNavigationBar extends StatefulWidget {
   final Function functionNavigate;
   AppBottomNavigationBar({Key? key, required this.functionNavigate})
@@ -12,7 +14,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  int _currentIndex = 0;
+  int _currentIndex = constants.INITIAL_PAGE_INDEX;
 
   // void _popupSelect(BuildContext context, int v) {
   //   switch (v) {
@@ -29,11 +31,11 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       showUnselectedLabels: false,
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.public),
           label: "Home",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle),
+          icon: Icon(Icons.home),
           label: "Add",
         ),
         BottomNavigationBarItem(
