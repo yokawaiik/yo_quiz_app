@@ -9,7 +9,8 @@ import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class CreatedQuizzesScreen extends StatelessWidget {
   static const String routeName = "/created-quizzes";
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  // var _scaffoldKey = GlobalKey<ScaffoldState>();
 
   CreatedQuizzesScreen({Key? key}) : super(key: key);
 
@@ -19,10 +20,10 @@ class CreatedQuizzesScreen extends StatelessWidget {
     Navigator.of(context).pushNamed(QuizMainScreen.routeName, arguments: id);
   }
 
-  Future<void> _shareQuiz(String id) async {
+  Future<void> _shareQuiz(BuildContext context, String id) async {
     await Clipboard.setData(ClipboardData(text: id));
-    ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
-        .showSnackBar(SnackBar(
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Code Copied to clipboard'),
     ));
   }
@@ -32,7 +33,7 @@ class CreatedQuizzesScreen extends StatelessWidget {
     _userProfile ??= ModalRoute.of(context)!.settings.arguments as UserProfile;
 
     return Scaffold(
-      key: _scaffoldKey,
+      // key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Created quizzes by user"),
       ),
@@ -75,8 +76,7 @@ class CreatedQuizzesScreen extends StatelessWidget {
                         // Text(createdQuizzes[i].description),
                         // Text(createdQuizzes[i].id),
                         GestureDetector(
-                          onTap: () =>
-                              _openQuiz(context, createdQuizzes[i].id),
+                          onTap: () => _openQuiz(context, createdQuizzes[i].id),
                           child: Stack(
                             children: [
                               QuizImage(createdQuizzes[i].quizImage),
@@ -110,7 +110,7 @@ class CreatedQuizzesScreen extends StatelessWidget {
                           children: [
                             IconButton(
                               onPressed: () =>
-                                  _shareQuiz(createdQuizzes[i].id),
+                                  _shareQuiz(context, createdQuizzes[i].id),
                               icon: Icon(Icons.share),
                             ),
                             // IconButton(

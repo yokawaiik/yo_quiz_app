@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/modules/create/screens/create_quiz_screen.dart';
 import 'package:yo_quiz_app/src/modules/home/provider/home_provider.dart';
+import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class ModalBottomNavigation extends StatefulWidget {
   ModalBottomNavigation({Key? key}) : super(key: key);
@@ -21,22 +22,20 @@ class _ModalBottomNavigationState extends State<ModalBottomNavigation> {
     });
   }
 
-  final GlobalKey _expansionTile = new GlobalKey();
 
   Future<void> _getQuiz() async {
     try {
       final code = _textFieldController.text.toString();
-      
-      final idQuiz = await Provider.of<HomeProvider>(context, listen: false)
-      .getQuiz(code);
 
+      final idQuiz =
+          await Provider.of<HomeProvider>(context, listen: false).getQuiz(code);
 
-      // todo: go to quiz
-
+      _textFieldController.clear();
       // go to quiz {idQuiz}
       Navigator.of(context).pop();
-      _textFieldController.clear();
-      
+
+      Navigator.of(context)
+          .pushNamed(QuizMainScreen.routeName, arguments: idQuiz);
     } catch (e) {
       Navigator.of(context).pop();
 
@@ -67,7 +66,7 @@ class _ModalBottomNavigationState extends State<ModalBottomNavigation> {
           padding: MediaQuery.of(context).viewInsets,
           child: ExpansionTile(
             // enabled: true,
-            key: _expansionTile,
+            
             initiallyExpanded: _isExpanded,
 
             leading: Icon(Icons.add_link),

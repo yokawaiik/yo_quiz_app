@@ -5,29 +5,28 @@ class HomeScreen extends StatelessWidget {
   static const String routeName = "/home";
   HomeScreen({Key? key}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
+  // var _scaffoldkey = GlobalKey<ScaffoldState>();
 
-  void _showMenu() {
+  void _showMenu(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
-      
-      context: _scaffoldkey.currentState!.context,
+      context: context,
       builder: (_) => ModalBottomNavigation(),
     );
   }
 
-  
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldkey,
+      // key: _scaffoldkey,
       // appBar: AppBar(),
-      body: Column(),
+      body: Column(
+        children: [
+          // todo: add listview - my available quiz
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showMenu,
+        onPressed: () => _showMenu(context),
         child: Icon(Icons.quiz),
       ),
     );
