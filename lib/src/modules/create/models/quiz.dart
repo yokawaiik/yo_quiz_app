@@ -20,7 +20,7 @@ class Quiz {
   Quiz({
     this.createdByUser,
     this.questionCount,
-    this.scope = Scope.public,
+    this.scope = Scope.private,
     this.description,
     this.quizImage,
     this.questions,
