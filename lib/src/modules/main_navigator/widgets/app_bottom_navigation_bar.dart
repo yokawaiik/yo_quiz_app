@@ -16,27 +16,21 @@ class AppBottomNavigationBar extends StatefulWidget {
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _currentIndex = constants.INITIAL_PAGE_INDEX;
 
-  // void _popupSelect(BuildContext context, int v) {
-  //   switch (v) {
-  //     case 0:
-  //       Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: _currentIndex,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
+      // showSelectedLabels: false,
+      // showUnselectedLabels: false,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.public),
-          label: "Home",
+          label: "Public",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: "Add",
+          label: "Added quizzes",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),

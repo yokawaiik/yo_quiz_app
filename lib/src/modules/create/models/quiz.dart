@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yo_quiz_app/src/modules/create/enums/scope.dart';
+import 'package:yo_quiz_app/src/core/enums/scope.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question.dart';
 
 class Quiz {

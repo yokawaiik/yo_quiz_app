@@ -24,8 +24,12 @@ class AppQuiz extends StatelessWidget {
             create: (_) => CreateQuizProvider()),
         ChangeNotifierProvider<QuizPlayProvider>(create: (_) => QuizPlayProvider()),
 
+        // Provider<HomeProvider>(
+        //     create: (_) => HomeProvider()),
         Provider<HomeProvider>(
             create: (_) => HomeProvider()),
+
+   
 
       ],
       child: MaterialApp(

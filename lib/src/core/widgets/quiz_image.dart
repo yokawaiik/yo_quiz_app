@@ -19,7 +19,6 @@ class QuizImage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-
     return SizedBox(
       height: height,
       child: Stack(
@@ -44,17 +43,20 @@ class QuizImage extends StatelessWidget {
                 ),
           if (title != null)
             Positioned(
-              bottom: 10,
-              left: 10,
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: Container(
                 padding: EdgeInsets.all(10),
+                width: double.infinity,
                 color: colorScheme.background.withOpacity(0.6),
-                child: Text(title!,
-                style: TextStyle(
-                  fontSize: textTheme.headline5!.fontSize,
-                  letterSpacing: 2.0,
-                  color: colorScheme.onBackground
-                ),),
+                child: Text(
+                  title!,
+                  style: TextStyle(
+                      fontSize: textTheme.headline5!.fontSize,
+                      letterSpacing: 2.0,
+                      color: colorScheme.onBackground),
+                ),
               ),
             )
         ],
