@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:yo_quiz_app/src/core/models/api_exception.dart';
 import 'package:yo_quiz_app/src/core/models/unknown_exception.dart';
-import 'package:yo_quiz_app/src/modules/home/models/available_quiz.dart';
+import 'package:yo_quiz_app/src/core/models/preview_quiz.dart';
 
 class HomeProvider {
   final _auth = FirebaseAuth.instance;
@@ -11,9 +11,9 @@ class HomeProvider {
 
   bool _isFirstLoad = false;
 
-  List<AvailableQuiz>? _quizzes;
+  List<PreviewQuiz>? _quizzes;
 
-  List<AvailableQuiz> get quizzes => [...?_quizzes];
+  List<PreviewQuiz> get quizzes => [...?_quizzes];
 
   Future<String> getQuiz(String? id) async {
     try {
@@ -54,7 +54,7 @@ class HomeProvider {
     }
   }
 
-  Stream<List<AvailableQuiz>> get streamAvailableQuizzes {
+  Stream<List<PreviewQuiz>> get streamAvailableQuizzes {
     return _db
         .collection("users")
         .doc(_auth.currentUser!.uid)
@@ -62,7 +62,7 @@ class HomeProvider {
         .orderBy("created", descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => AvailableQuiz.fromDoc(_auth.currentUser!.uid, doc))
+            .map((doc) => PreviewQuiz.fromDoc(_auth.currentUser!.uid, doc))
             .toList());
   }
 

@@ -6,6 +6,7 @@ import 'package:yo_quiz_app/src/modules/home/screens/home_screen.dart';
 import 'package:yo_quiz_app/src/modules/main_navigator/widgets/app_bottom_navigation_bar.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
+import 'package:yo_quiz_app/src/modules/public/screen/public_screen.dart';
 
 import '../constants/constants.dart' as constants;
 
@@ -35,11 +36,7 @@ class _MainNavigatorScreenState extends State<MainNavigatorScreen> {
     );
 
     _screenList = [
-      // Todo: add real screen here
-      Center(
-        child: Text("public"),
-      ),
-      // add item
+      PublicScreen(),
       HomeScreen(),
       ProfileScreen(),
     ];

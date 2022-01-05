@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/core/widgets/modal_bottom_navigation.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_card.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
-import 'package:yo_quiz_app/src/modules/home/models/available_quiz.dart';
+import 'package:yo_quiz_app/src/core/models/preview_quiz.dart';
 import 'package:yo_quiz_app/src/modules/home/provider/home_provider.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       // appBar: AppBar(),
       body: SafeArea(
-        child: StreamBuilder<List<AvailableQuiz>>(
+        child: StreamBuilder<List<PreviewQuiz>>(
             // stream:
             //     homeProvider(context).loadAvailableQuizzes(),
             stream: homeProvider(context).streamAvailableQuizzes,
@@ -99,6 +99,7 @@ class HomeScreen extends StatelessWidget {
                   return QuizCard(
                     quiz: quiz,
                     onLongPress: () => _quizRemove(context, quiz.id),
+                    cardHeight: mediaQuery.size.height / 4,
                   );
                 },
               );

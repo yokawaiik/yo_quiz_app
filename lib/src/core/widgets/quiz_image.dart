@@ -28,6 +28,7 @@ class QuizImage extends StatelessWidget {
                   quizImage!,
                   height: double.infinity,
                   width: double.infinity,
+                  
                   fit: BoxFit.cover,
                 )
               : Container(
@@ -49,13 +50,13 @@ class QuizImage extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(10),
                 width: double.infinity,
-                color: colorScheme.background.withOpacity(0.6),
+                color: colorScheme.primary.withOpacity(0.6),
                 child: Text(
                   title!,
                   style: TextStyle(
                       fontSize: textTheme.headline5!.fontSize,
                       letterSpacing: 2.0,
-                      color: colorScheme.onBackground),
+                      color: colorScheme.onPrimary),
                 ),
               ),
             )

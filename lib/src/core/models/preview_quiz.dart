@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yo_quiz_app/src/core/enums/scope.dart';
 
-class AvailableQuiz {
+class PreviewQuiz {
   late final String id;
 
   late final Timestamp created;
@@ -15,7 +15,7 @@ class AvailableQuiz {
 
   late final bool isUserOwnQuiz;
 
-  AvailableQuiz.fromDoc(uid, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+PreviewQuiz.fromDoc(uid, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
     id = doc.id;
 
     final data = doc.data();

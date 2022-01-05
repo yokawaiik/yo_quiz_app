@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
-import 'package:yo_quiz_app/src/modules/home/models/available_quiz.dart';
+import 'package:yo_quiz_app/src/core/models/preview_quiz.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class QuizCard extends StatelessWidget {
   Function? onLongPress;
+  final double cardHeight;
 
   QuizCard({
     Key? key,
     required this.quiz,
-    this.onLongPress,
+    this.onLongPress, 
+    this.cardHeight = 200,
   }) : super(key: key);
 
-  final AvailableQuiz quiz;
+  final PreviewQuiz quiz;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class QuizCard extends StatelessWidget {
             QuizImage(
               quiz.quizImage,
               title: quiz.title,
+              height: cardHeight,
             ),
           ],
         ),

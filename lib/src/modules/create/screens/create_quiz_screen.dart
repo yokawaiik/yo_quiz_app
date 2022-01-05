@@ -59,19 +59,19 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
     if (!isFormValid) return;
 
     _form.currentState!.save();
-    // todo: save data in provider
 
     FocusScope.of(context).unfocus();
     Navigator.of(context).pushNamed(CreateQuestionsAreaScreen.routeName);
   }
 
   void _closeCreateQuiz() {
-    Navigator.pushReplacementNamed(context, AuthWrapper.routeName);
+    // Navigator.pushReplacementNamed(context, AuthWrapper.routeName);
+    Navigator.of(context).pop();
     Provider.of<CreateQuizProvider>(context, listen: false).cancelCreateQuiz();
   }
 
   void _createQuiz() async {
-    // todo:
+
     try {
       setState(() {
         _isQuizCreate = true;

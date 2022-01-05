@@ -7,6 +7,7 @@ import 'package:yo_quiz_app/src/modules/home/screens/home_screen.dart';
 import 'package:yo_quiz_app/src/modules/main_navigator/screens/main_navigator_screen.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/created_quizzes_screen.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/profile_screen.dart';
+import 'package:yo_quiz_app/src/modules/public/screen/public_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/question_play_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_results_screen.dart';
@@ -31,6 +32,8 @@ class AppRouter {
     QuizResultsScreen.routeName: (ctx) => QuizResultsScreen(),
 
     HomeScreen.routeName: (ctx) => HomeScreen(),
+
+    PublicScreen.routeName: (ctx) => PublicScreen(),
   };
 
   static const initialRoute = AuthWrapper.routeName;

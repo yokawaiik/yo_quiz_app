@@ -59,7 +59,8 @@ class _ModalBottomNavigationState extends State<ModalBottomNavigation> {
           leading: Icon(Icons.post_add),
           title: Text("Create test"),
           onTap: () {
-            Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
+            Navigator.of(context).popAndPushNamed(CreateQuizScreen.routeName);
+            // Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
           },
         ),
         Padding(
