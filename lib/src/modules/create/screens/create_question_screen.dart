@@ -177,10 +177,7 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
                   padding: EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      // Container(
-                      //   height: 282,
-                      //   color: Colors.red,
-                      // ),
+
                       TextFormField(
                         initialValue: _question,
                         onChanged: (v) {
@@ -196,49 +193,49 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      CheckboxListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text("Is this question has timer?"),
-                        value: _questionHasTimer,
-                        onChanged: (v) {
-                          setState(() {
-                            _questionHasTimer = v!;
-                          });
-                        },
-                      ),
+                      // CheckboxListTile(
+                      //   contentPadding: EdgeInsets.all(0),
+                      //   controlAffinity: ListTileControlAffinity.leading,
+                      //   title: Text("Is this question has timer?"),
+                      //   value: _questionHasTimer,
+                      //   onChanged: (v) {
+                      //     setState(() {
+                      //       _questionHasTimer = v!;
+                      //     });
+                      //   },
+                      // ),
                       SizedBox(
                         height: 10,
                       ),
-                      AnimatedSwitcher(
-                        duration: Duration(milliseconds: 300),
-                        child: _questionHasTimer
-                            ? Column(
-                                children: [
-                                  TextFormField(
-                                    initialValue: _secondsInTimer == null
-                                        ? ""
-                                        : _secondsInTimer.toString(),
-                                    onChanged: (v) {
-                                      _secondsInTimer = int.parse(v);
-                                    },
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                        labelText: "Seconds in timer"),
-                                    validator: (v) {
-                                      // todo: implementation validator for int
-                                      return null;
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              )
-                            : SizedBox(
-                                height: 0,
-                              ),
-                      ),
+                      // AnimatedSwitcher(
+                      //   duration: Duration(milliseconds: 300),
+                      //   child: _questionHasTimer
+                      //       ? Column(
+                      //           children: [
+                      //             TextFormField(
+                      //               initialValue: _secondsInTimer == null
+                      //                   ? ""
+                      //                   : _secondsInTimer.toString(),
+                      //               onChanged: (v) {
+                      //                 _secondsInTimer = int.parse(v);
+                      //               },
+                      //               keyboardType: TextInputType.number,
+                      //               decoration: InputDecoration(
+                      //                   labelText: "Seconds in timer"),
+                      //               validator: (v) {
+                      //                 // todo: implementation validator for int
+                      //                 return null;
+                      //               },
+                      //             ),
+                      //             SizedBox(
+                      //               height: 10,
+                      //             ),
+                      //           ],
+                      //         )
+                      //       : SizedBox(
+                      //           height: 0,
+                      //         ),
+                      // ),
 
                       ListView.builder(
                         shrinkWrap: true,

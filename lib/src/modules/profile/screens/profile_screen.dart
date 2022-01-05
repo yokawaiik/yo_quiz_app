@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/src/provider.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/models/user_profile.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/user_profile_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/screens/created_quizzes_screen.dart';
+import 'package:yo_quiz_app/src/modules/profile/widgets/profile_image.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = "/profile";
@@ -18,125 +22,111 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _setProfileImage(BuildContext context) async {
+    final imagePicker = ImagePicker();
+
+    final pickedImage = await imagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50);
+
+    if (pickedImage == null) return;
+
+    await Provider.of<UserProfileProvider>(context, listen: false)
+        .setProfileImage(File(pickedImage.path));
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final userUid = ModalRoute.of(context)!.settings.arguments as String?;
 
-    return FutureBuilder<UserProfile>(
-        future:
-            Provider.of<UserProfileProvider>(context).loadUserProfile(userUid),
-        builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Icon(
-                Icons.error,
-                color: Theme.of(context).colorScheme.error,
-              ),
-            );
-          }
-
-          final userProfile = snapshot.data!;
-
-          var appBar = AppBar(
-            title: Text(userProfile.isCurrentUser
-                ? "Your profile"
-                : "Profile: ${userProfile.login}"),
-            actions: [
-              if (userProfile.isCurrentUser)
-                PopupMenuButton(
-                  icon: Icon(Icons.more_vert),
-                  onSelected: (String i) {
-                    switch (i) {
-                      case "1":
-                        _goToCreatedQuizzesScreen(context, userProfile);
-                        break;
-                      case "0":
-                        context.read<AuthProvider>().signOut();
-                        break;
-                    }
-                  },
-                  itemBuilder: (ctx) => [
-                    const PopupMenuItem(
-                      value: "1",
-                      child: Text('My created quizzes'),
-                      enabled: true,
-                    ),
-                    const PopupMenuItem(
-                      value: "0",
-                      child: Text('Sign Out'),
-                    ),
-                  ],
-                )
-            ],
+    // return FutureBuilder<UserProfile>(
+    return StreamBuilder<UserProfile?>(
+      // future:
+      //     Provider.of<UserProfileProvider>(context).loadUserProfile(userUid),
+      stream: Provider.of<UserProfileProvider>(context).userProfile(userUid),
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
           );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Icon(
+              Icons.error,
+              color: Theme.of(context).colorScheme.error,
+              size: 200,
+            ),
+          );
+        } else if (snapshot.data == null) {
+          return Center(
+            child: Icon(
+              Icons.no_accounts,
+              color: Theme.of(context).colorScheme.secondary,
+              size: 200,
+            ),
+          );
+        }
 
-          return Scaffold(
-            appBar: appBar,
-            body: SingleChildScrollView(
-                child: Column(
+        final userProfile = snapshot.data!;
+
+        var appBar = AppBar(
+          title: Text(userProfile.isCurrentUser
+              ? "Your profile"
+              : "Profile: ${userProfile.login}"),
+          actions: [
+            if (userProfile.isCurrentUser)
+              PopupMenuButton(
+                icon: Icon(Icons.more_vert),
+                onSelected: (String i) {
+                  switch (i) {
+                    case "1":
+                      _goToCreatedQuizzesScreen(context, userProfile);
+                      break;
+                    case "0":
+                      context.read<AuthProvider>().signOut();
+                      break;
+                  }
+                },
+                itemBuilder: (ctx) => [
+                  const PopupMenuItem(
+                    value: "1",
+                    child: Text('My created quizzes'),
+                    enabled: true,
+                  ),
+                  const PopupMenuItem(
+                    value: "0",
+                    child: Text('Sign Out'),
+                  ),
+                ],
+              )
+          ],
+        );
+
+        return Scaffold(
+          appBar: appBar,
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                Container(
+                ProfileImage(
                   height: (mediaQuery.size.height -
                           mediaQuery.padding.top -
                           appBar.preferredSize.height) *
-                      (4 / 7),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary),
-                  child: Stack(
-                    children: [
-                      userProfile.avatar != null
-                          ? Image.network(
-                              userProfile.avatar!,
-                              width: double.infinity,
-                            )
-                          : Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 200,
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                              ),
-                            ),
-                      Positioned(
-                        left: 20,
-                        bottom: 20,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              userProfile.fullName,
-                              style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline4!
-                                    .fontSize,
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                              ),
-                            ),
-                            Text(
-                              userProfile.login,
-                              style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .fontSize,
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
+                      (3 / 7),
+                  userProfile: userProfile,
+                  action: PopupMenuButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      size: 30,
+                    ),
+                    itemBuilder: (_) => [
+                      PopupMenuItem(
+                        child: Text("Select profile image"),
+                        onTap: () => _setProfileImage(context),
                       ),
                     ],
                   ),
+                  // onTap: _setProfileImage(File image)
                 ),
                 SizedBox(
                   height: 10,
@@ -147,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
                     maxHeight: (mediaQuery.size.height -
                             mediaQuery.padding.top -
                             appBar.preferredSize.height) *
-                        (3 / 7),
+                        (4 / 7),
                   ),
                   child: ListView(
                     shrinkWrap: true,
@@ -166,7 +156,6 @@ class ProfileScreen extends StatelessWidget {
                           title: Text("Logout"),
                           subtitle: Text("Exit from app"),
                           onTap: () async {
-                            
                             await Provider.of<AuthProvider>(
                               context,
                               listen: false,
@@ -177,8 +166,10 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 )
               ],
-            )),
-          );
-        });
+            ),
+          ),
+        );
+      },
+    );
   }
 }

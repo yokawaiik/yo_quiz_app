@@ -6,7 +6,7 @@ Flutter project: quiz.
 
 profile:
 - [x] show userProfile
-- [ ] user image
+- [x] user image
 - [x] users tests
 
 quiz create:
@@ -14,19 +14,24 @@ quiz create:
 - [x] timer in question
 - [x] create question
 - [x] update question
-- [ ] delete quiz
-- [ ] edit created quiz
-- [ ] share quiz
-- [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
+- [x] share quiz
 
 quiz game:
 - [x] quiz main (description) screen
 - [x] screen question
 - [x] screen results
-- [ ] previous result
 
 home page:
-- [ ] official tests
+- [x] official tests
+
+quiz game:
+- [ ] previous result
+- [ ] timer
+
+quiz create other:
+- [ ] delete quiz
+- [ ] edit created quiz
+- [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
 
 other:
 - [ ] leaderboard
