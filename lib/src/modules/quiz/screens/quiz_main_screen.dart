@@ -45,7 +45,8 @@ class QuizMainScreen extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       body: FutureBuilder<GameQuiz?>(
-        future: Provider.of<QuizPlayProvider>(context, listen: false).loadQuiz(quizId),
+        future: Provider.of<QuizPlayProvider>(context, listen: false)
+        .loadQuiz(quizId),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -61,7 +62,7 @@ class QuizMainScreen extends StatelessWidget {
             );
           } else if (snapshot.hasData && snapshot.data == null) {
             return Center(
-              child: Text("null"),
+              child: Text("Quiz has been deleted."),
             );
           }
 

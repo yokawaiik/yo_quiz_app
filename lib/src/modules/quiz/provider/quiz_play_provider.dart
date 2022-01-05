@@ -66,18 +66,23 @@ class QuizPlayProvider extends ChangeNotifier {
   }
 
   Future<GameQuiz?> loadQuiz(String id) async {
-    print("loadQuiz");
+    // print("loadQuiz");
     try {
       final snapshotQuiz = await _db.collection("quizzes").doc(id).get();
 
-      final snapshotQuestions =
-          await _db.collection("quizzes").doc(id).collection("questions").get();
+      if (snapshotQuiz.exists) {
+        final snapshotQuestions = await _db
+            .collection("quizzes")
+            .doc(id)
+            .collection("questions")
+            .get();
 
-      _quizPlay = GameQuiz.fromDoc(snapshotQuiz, snapshotQuestions);
+        _quizPlay = GameQuiz.fromDoc(snapshotQuiz, snapshotQuestions);
 
-      
+        return _quizPlay;
+      }
 
-      return _quizPlay;
+      return null;
     } on FirebaseException catch (e) {
       var message = "Firebase db error.";
 
