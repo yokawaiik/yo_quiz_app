@@ -29,7 +29,7 @@ quiz game:
 - [ ] timer
 
 quiz create other:
-- [ ] delete quiz
+- [x] delete quiz
 - [ ] edit created quiz
 - [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
 
