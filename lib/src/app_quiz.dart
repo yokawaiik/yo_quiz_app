@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yo_quiz_app/src/core/router/app_router.dart';
 import 'package:yo_quiz_app/src/modules/auth/provider/auth_provider.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
+import 'package:yo_quiz_app/src/modules/create/provider/ui_quiz_create_provider.dart';
 import 'package:yo_quiz_app/src/modules/home/provider/home_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/created_quizzes_provider.dart';
 import 'package:yo_quiz_app/src/modules/profile/provider/user_profile_provider.dart';
@@ -21,18 +22,22 @@ class AppQuiz extends StatelessWidget {
         Provider<UserProfileProvider>(create: (_) => UserProfileProvider()),
         Provider<CreatedQuizzesProvider>(
             create: (_) => CreatedQuizzesProvider()),
-        ChangeNotifierProvider<CreateQuizProvider>(
-            create: (_) => CreateQuizProvider()),
-        ChangeNotifierProvider<QuizPlayProvider>(create: (_) => QuizPlayProvider()),
+
+        Provider<CreateQuizProvider>(create: (_) => CreateQuizProvider()),
+
+        ChangeNotifierProxyProvider<CreateQuizProvider, UIQuizCreateProvider>(
+            create: (context) => UIQuizCreateProvider(createQuizProvider: CreateQuizProvider()),
+            update: (context, createQuiz, previousUIQuizCreate) =>
+                previousUIQuizCreate!..update(createQuiz)),
+
+        ChangeNotifierProvider<QuizPlayProvider>(
+            create: (_) => QuizPlayProvider()),
 
         // Provider<HomeProvider>(
         //     create: (_) => HomeProvider()),
-        Provider<HomeProvider>(
-            create: (_) => HomeProvider()),
+        Provider<HomeProvider>(create: (_) => HomeProvider()),
 
-         Provider<PublicProvider>(
-            create: (_) => PublicProvider()),
-
+        Provider<PublicProvider>(create: (_) => PublicProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

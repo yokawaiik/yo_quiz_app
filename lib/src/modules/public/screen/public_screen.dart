@@ -41,7 +41,6 @@ class PublicScreen extends StatelessWidget {
 
             final quizzes = snapshot.data!;
 
-
             return ListView.separated(
               padding: EdgeInsets.all(10),
               separatorBuilder: (context, index) {
@@ -52,10 +51,13 @@ class PublicScreen extends StatelessWidget {
               itemCount: quizzes.length,
               itemBuilder: (_, i) {
                 final quiz = quizzes[i];
+
+                print("public screen ${quiz.quizImage}");
                 return QuizCard(
-                  quiz: quiz,
-                  cardHeight:
-                      mediaQuery.size.height / 4,
+                  id: quiz.id,
+                  image: quiz.quizImage,
+                  title: quiz.title,
+                  cardHeight: mediaQuery.size.height / 4,
                 );
               },
             );

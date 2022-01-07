@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yo_quiz_app/src/modules/auth/screens/auth_wrapper_screen.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
+import 'package:yo_quiz_app/src/modules/create/provider/ui_quiz_create_provider.dart';
 import 'package:yo_quiz_app/src/modules/create/screens/create_question_screen.dart';
 
 import '../constants/constants.dart' as constants;
@@ -18,8 +18,8 @@ class CreateQuestionsAreaScreen extends StatefulWidget {
 }
 
 class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
-  // todo: delete
-  late List<Question> _questions;
+
+  late List<Question>? _questions;
 
   @override
   void initState() {
@@ -27,10 +27,6 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
     _loadQuestions();
   }
 
-  void _closeCreateQuiz() {
-    Navigator.pushReplacementNamed(context, AuthWrapper.routeName);
-    Provider.of<CreateQuizProvider>(context, listen: false).cancelCreateQuiz();
-  }
 
   void _goBackToCreateQuizScreen() {
     Navigator.pop(context);
@@ -51,7 +47,7 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
   }
 
   void _loadQuestions() {
-    _questions = context.read<CreateQuizProvider>().questions;
+    _questions = context.read<UIQuizCreateProvider>().createQuizProvider.quiz.questions;
   }
 
   void _goToCreateQuestionScreen(String id) {
@@ -64,14 +60,10 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
     final mediaQuery = MediaQuery.of(context);
 
     final appBar = AppBar(
-      automaticallyImplyLeading: false,
+      // automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       foregroundColor: Theme.of(context).colorScheme.primary,
       actions: [
-        IconButton(
-          onPressed: _closeCreateQuiz,
-          icon: Icon(Icons.close),
-        ),
         Spacer(),
         IconButton(
             onPressed: _goBackToCreateQuizScreen,
@@ -81,7 +73,8 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
       elevation: 0.0,
     );
 
-    final questions = Provider.of<CreateQuizProvider>(context).questions;
+    final questions = Provider.of<UIQuizCreateProvider>(context).
+    createQuizProvider.questions;
 
     return WillPopScope(
       onWillPop: () async {
@@ -107,10 +100,13 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
                   ),
                   // itemCount: _questions.length,
                   itemCount: questions.length,
-                  itemBuilder: (_, i) => GridTile(
+                  itemBuilder: (_, i) {
+                    final question = questions[i];
+
+                    return GridTile(
                     child: GestureDetector(
                       onTap: () {
-                        _goToCreateQuestionScreen(questions[i].id);
+                        _goToCreateQuestionScreen(question.id);
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -121,7 +117,7 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
                         child: Center(
                           child: Text(
                             // _questions[i].question,
-                            questions[i].question,
+                            question.question,
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
@@ -132,7 +128,8 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
                         ),
                       ),
                     ),
-                  ),
+                  );
+                  },
                 ),
               ),
             ],

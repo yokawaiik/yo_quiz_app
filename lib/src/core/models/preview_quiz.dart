@@ -13,6 +13,8 @@ class PreviewQuiz {
   late final Scope scope;
   late final bool timer;
 
+  late final String? quizImageRef;
+
   late final bool isUserOwnQuiz;
 
 PreviewQuiz.fromDoc(uid, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
@@ -25,9 +27,13 @@ PreviewQuiz.fromDoc(uid, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
     title = data["title"];
     description = data["description"];
     questionCount = data["questionCount"];
-    quizImage = data["quizImage"];
+    
+
     scope = Scopes.fromString(data["scope"]);
     timer = data["timer"];
+
+    quizImage = data["quizImage"];
+    quizImageRef = data["quizImageRef"];
 
     isUserOwnQuiz = (uid == createdByUser);
     

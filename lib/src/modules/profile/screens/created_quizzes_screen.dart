@@ -30,6 +30,28 @@ class CreatedQuizzesScreen extends StatelessWidget {
     ));
   }
 
+  Future<void> _deleteQuiz(BuildContext context, String id) async {
+    String message;
+    try {
+      // todo: delete provider
+
+      message = "Quiz deleted";
+    } catch (e) {
+      message = e.toString();
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  _editQuiz(BuildContext context, String id) {
+    Navigator.of(context).pushNamed(
+      CreateQuizScreen.routeName,
+      arguments: id,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _userProfile ??= ModalRoute.of(context)!.settings.arguments as UserProfile;
@@ -75,8 +97,6 @@ class CreatedQuizzesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: Column(
                     children: [
-                      // Text(createdQuizzes[i].description),
-                      // Text(createdQuizzes[i].id),
                       GestureDetector(
                         onTap: () => _openQuiz(context, createdQuizzes[i].id),
                         child: Stack(
@@ -115,12 +135,14 @@ class CreatedQuizzesScreen extends StatelessWidget {
                                 _shareQuiz(context, createdQuizzes[i].id),
                             icon: Icon(Icons.share),
                           ),
-                          // IconButton(
-                          //   onPressed: null,
-                          //   icon: Icon(Icons.edit),
-                          // ),
                           IconButton(
-                            onPressed: null,
+                            onPressed: () =>
+                                _editQuiz(context, createdQuizzes[i].id),
+                            icon: Icon(Icons.edit),
+                          ),
+                          IconButton(
+                            onPressed: () =>
+                                _deleteQuiz(context, createdQuizzes[i].id),
                             icon: Icon(Icons.delete),
                           ),
                         ],
@@ -133,12 +155,12 @@ class CreatedQuizzesScreen extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
-      },
-      child: Icon(Icons.note_add_outlined),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(CreateQuizScreen.routeName);
+        },
+        child: Icon(Icons.note_add_outlined),
       ),
     );
-    
   }
 }

@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
-import 'package:yo_quiz_app/src/core/models/preview_quiz.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class QuizCard extends StatelessWidget {
-  Function? onLongPress;
+  final Function? onLongPress;
   final double cardHeight;
 
-  QuizCard({
+
+  final String id;
+  final String? image;
+  final String? title;
+
+  const QuizCard({
     Key? key,
-    required this.quiz,
+    required this.id,
+    required this.image,
+    required this.title,
     this.onLongPress, 
     this.cardHeight = 200,
   }) : super(key: key);
 
-  final PreviewQuiz quiz;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
-            .pushNamed(QuizMainScreen.routeName, arguments: quiz.id);
+            .pushNamed(QuizMainScreen.routeName, arguments: id);
       },
       onLongPress: onLongPress != null ? () => onLongPress!() : null,
       child: ClipRRect(
@@ -29,9 +34,10 @@ class QuizCard extends StatelessWidget {
         child: Column(
           children: [
             QuizImage(
-              quiz.quizImage,
-              title: quiz.title,
+              image,
+              title: title,
               height: cardHeight,
+              iconSize: 80,
             ),
           ],
         ),

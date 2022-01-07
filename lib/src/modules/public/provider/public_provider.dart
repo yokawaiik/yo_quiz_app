@@ -10,7 +10,7 @@ class PublicProvider {
   Stream<List<PreviewQuiz>> get quizzes {
     return _db
         .collection("quizzes")
-        .where("scope", isEqualTo: Scope.private.name)
+        .where("scope", isEqualTo: Scope.public.name)
         .snapshots()
         .map((snapshots) => snapshots.docs
             .map((doc) => PreviewQuiz.fromDoc(_auth.currentUser!.uid, doc))

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:yo_quiz_app/src/core/models/api_exception.dart';
 import 'package:yo_quiz_app/src/core/models/unknown_exception.dart';
@@ -8,6 +9,7 @@ import 'package:yo_quiz_app/src/core/models/preview_quiz.dart';
 class HomeProvider {
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
 
   bool _isFirstLoad = false;
 
@@ -61,9 +63,32 @@ class HomeProvider {
         .collection("recievedQuizzes")
         .orderBy("created", descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => PreviewQuiz.fromDoc(_auth.currentUser!.uid, doc))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) {
+
+
+              final previewQuiz = PreviewQuiz.fromDoc(
+                _auth.currentUser!.uid,
+                doc,
+              );
+
+              // previewQuiz.quizImageRef;
+
+              // previewQuiz.quizImage = _storage.ref(previewQuiz.quizImageRef).getDownloadURL();
+
+
+              return previewQuiz;
+            }).toList());
+  }
+
+  // todo: use it
+  Future<String?> loadQuizImage(String quizImageRef) async {
+    try {
+      return await _storage.ref(quizImageRef).getDownloadURL();
+
+    } catch (e) {
+      print(e);
+      ApiException("Error storage.");
+    }
   }
 
   // Future<List<AvailableQuiz>> loadAvailableQuizzes(

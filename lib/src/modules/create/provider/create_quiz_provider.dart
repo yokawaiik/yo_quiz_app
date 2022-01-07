@@ -1,57 +1,83 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+
 import 'package:yo_quiz_app/src/core/models/api_exception.dart';
 import 'package:yo_quiz_app/src/core/models/unknown_exception.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question.dart';
 import 'package:yo_quiz_app/src/modules/create/models/quiz.dart';
 
-class CreateQuizProvider extends ChangeNotifier {
+
+class CreateQuizProvider {
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
   final _firebaseStorage = FirebaseStorage.instance;
 
-  List<Question> _questions = [];
+  Quiz quiz = Quiz(questions: []);
 
-  List<Question> get questions => [..._questions];
+  String? quizImage;
 
-  // create
+  // List<Question> _questions = [];
 
-  Future<void> createQuiz(Quiz quiz) async {
+  // List<Question> get questions => [..._questions];
+  // List<Question> get questions => [...?quiz.questions];
+
+  List<Question> get questions => [...?quiz.questions];
+
+
+  set title(String? title) {
+    print(title);
+    quiz.title = title;
+  }
+
+  String? get title => quiz.title;
+
+  set description(String? description) {
+    print(description);
+    quiz.description = description;
+  }
+
+  String? get description => quiz.description;
+
+  void cancelCreateQuiz() {
+    print("CreateQuizProvider cancelCreateQuiz");
+    // print("${quiz.description} ${quiz.title}");
+    quizImage = null;
+    // description = null;
+    // title = null;
+
+    quiz = Quiz(questions: []);
+  }
+
+  // Future<void> createQuiz(Quiz quiz) async {
+  Future<void> createQuiz() async {
     try {
       // create quiz doc
       final quizCredential = await _db.collection("quizzes").add({
         "title": quiz.title!,
-        "description": quiz.description!,
-        "created": quiz.created,
+        "description": quiz.description,
+        "created": Timestamp.now(),
         "createdByUser": _auth.currentUser!.uid,
-        "questionCount": _questions.length,
+        "questionCount": quiz.questions!.length,
         "scope": quiz.scope.name,
         "timer": quiz.timer,
         "quizImage": null,
+        "quizImageRef": null,
       });
 
-      if (quiz.quizImage != null) {
-        final uploadTask = await _firebaseStorage
-            .ref()
-            .child("quizzes")
-            .child("quizImage")
-            .child("${quizCredential.id}.jpg")
-            .putFile(quiz.quizImage!);
+      quiz.id = quizCredential.id;
 
-        final quizImagePath = await _firebaseStorage
-            .ref(uploadTask.ref.fullPath)
-            .getDownloadURL();
-
-        await _db.collection("quizzes").doc(quizCredential.id).update({
-          "quizImage": quizImagePath,
-        });
+      // ? if Quiz update then update image in another method setQuizImage
+      if (quizImage != null) {
+        // await uploadQuizImage(isCreateQuiz: true);
+        await uploadQuizImage(isCreateQuiz: true);
       }
 
       // create quiz nested collection "questions"
 
-      for (var item in _questions) {
+      for (var item in quiz.questions!) {
         int rightAnswers = 0;
         for (var answer in item.answers) {
           if (answer.isRight) rightAnswers++;
@@ -65,7 +91,7 @@ class CreateQuizProvider extends ChangeNotifier {
             .set({
           "question": item.question,
           "secondsInTimer": item.secondsInTimer,
-          "timer": item.questionHasTimer,
+          "timer": item.timer,
           "answers": item.answersToListOfMap(),
           "rightAnswers": rightAnswers,
         });
@@ -81,43 +107,82 @@ class CreateQuizProvider extends ChangeNotifier {
     }
   }
 
-  void addQuestion(Question question) async {
-    _questions.add(question);
-    notifyListeners();
+  Future<void> uploadQuizImage({bool isCreateQuiz = false}) async {
+    // if method tries use when create quiz
+    if (!isCreateQuiz && quiz.id == null) return;
+
+    try {
+      final uploadTask = await _firebaseStorage
+          .ref()
+          .child("quizzes")
+          .child("quizImage")
+          .child("${quiz.id}.jpg")
+          .putFile(File(quizImage!));
+
+      final quizImageUrl =
+          await _firebaseStorage.ref(uploadTask.ref.fullPath).getDownloadURL();
+
+      await _db.collection("quizzes").doc(quiz.id).update({
+        "quizImage": quizImageUrl,
+        "quizImageRef": uploadTask.ref.fullPath,
+      });
+
+      quiz.quizImageRef = uploadTask.ref.fullPath;
+    } on FirebaseException catch (e) {
+      var message = "Database error";
+
+      throw ApiException(message);
+    } catch (e) {
+      print("createQuiz $e");
+
+      throw UnknownException(e.toString());
+    }
+  }
+
+  // will be used when user open for create quiz
+  Future<void> loadQuizImage() async {
+    if (quiz.quizImageRef == null) return;
+    try {
+      final downloadURL =
+          await _firebaseStorage.ref(quiz.quizImageRef).getDownloadURL();
+
+      print("loadQuizImage $downloadURL");
+
+      quizImage = downloadURL;
+    } catch (e) {
+      print(e);
+      throw ApiException("Error loading image.");
+    }
   }
 
   // void editQuestion(Question editedQuestion) async {
-  // Todo:
-  void editQuestion(Question editedQuestion) {
-    final index =
-        _questions.indexWhere((question) => question.id == editedQuestion.id);
 
-    _questions[index] = editedQuestion;
-    notifyListeners();
-  }
 
-  void removeQuestion(String id) {
-    _questions.removeWhere((item) => item.id == id);
-    notifyListeners();
-  }
+  Future<Quiz> loadQuizToEdit(String id) async {
+    print("Provider loadQuizToEdit");
+    try {
+      final quizDoc = await _db.collection("quizzes").doc(id).get();
 
-  Future<void> loadQuiz() async {
-    // Todo: load quiz for edit its
-  }
+      if (!quizDoc.exists) throw UnknownException("Quiz isn't exist.");
 
-  Question loadQuestion(String id) {
-    // Todo: load question for edit its
-    final question =
-        _questions.firstWhere((Question question) => question.id == id);
+      final questionsSnapshot =
+          await _db.collection("quizzes").doc(id).collection("questions").get();
 
-    return question;
-  }
+      quiz = Quiz.fromDoc(quizDoc, questionsSnapshot);
+      // await loadQuizImage();
 
-  // cancel
+      // quizImage
 
-  void cancelCreateQuiz() {
-    // Todo: clearing all data
+      // print("Provider loadQuizToEdit quiz.id: ${quiz.id}");
+      return quiz;
+    } on FirebaseException catch (e) {
+      var message = "Database error";
 
-    _questions.clear();
+      throw ApiException(message);
+    } catch (e) {
+      print("loadQuizToEdit $e");
+
+      throw UnknownException(e.toString());
+    }
   }
 }

@@ -5,6 +5,7 @@ import 'package:yo_quiz_app/src/core/widgets/quiz_card.dart';
 import 'package:yo_quiz_app/src/core/widgets/quiz_image.dart';
 import 'package:yo_quiz_app/src/core/models/preview_quiz.dart';
 import 'package:yo_quiz_app/src/modules/home/provider/home_provider.dart';
+import 'package:yo_quiz_app/src/modules/home/widgets/home_quiz_card.dart';
 import 'package:yo_quiz_app/src/modules/quiz/screens/quiz_main_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,33 +19,6 @@ class HomeScreen extends StatelessWidget {
       isScrollControlled: true,
       context: context,
       builder: (_) => ModalBottomNavigation(),
-    );
-  }
-
-  Future<void> _quizRemove(BuildContext context, String id) async {
-    await showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text('Delete quiz'),
-          content: Text('Do you want delete quiz?'),
-          actions: <Widget>[
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('No')),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Provider.of<HomeProvider>(context, listen: false)
-                    .removeQuiz(id);
-              },
-              child: Text('Yes!'),
-            )
-          ],
-        );
-      },
     );
   }
 
@@ -96,18 +70,23 @@ class HomeScreen extends StatelessWidget {
                 itemCount: quizzes.length,
                 itemBuilder: (_, i) {
                   final quiz = quizzes[i];
-                  return QuizCard(
-                    quiz: quiz,
-                    onLongPress: () => _quizRemove(context, quiz.id),
-                    cardHeight: mediaQuery.size.height / 4,
-                  );
+
+                  // return QuizCard(
+                  //   id: quiz.id,
+                  //   image: quiz.quizImage,
+                  //   title: quiz.title,
+                  //   onLongPress: () => _quizRemove(context, quiz.id),
+                  //   cardHeight: mediaQuery.size.height / 4,
+                  // );
+                  return HomeQuizCard(quiz,
+                      cardHeight: mediaQuery.size.height / 4);
                 },
               );
             }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showMenu(context),
-        child: Icon(Icons.quiz),
+        child: Icon(Icons.add),
       ),
     );
   }

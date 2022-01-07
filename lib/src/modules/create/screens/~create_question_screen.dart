@@ -5,7 +5,6 @@ import 'package:yo_quiz_app/src/modules/create/models/answer.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question_create_errors.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
-import 'package:yo_quiz_app/src/modules/create/provider/ui_quiz_create_provider.dart';
 
 import '../constants/constants.dart' as constants;
 
@@ -43,10 +42,8 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
     // for only one initialization
     if (_uid != null) return;
 
-    final question = Provider.of<UIQuizCreateProvider>(context, listen: false)
-        .createQuizProvider
-        .quiz
-        .questions!
+    final question = Provider.of<CreateQuizProvider>(context, listen: false)
+        .questions
         .firstWhere((item) => item.id == id);
 
     if (question.timer) {
@@ -107,6 +104,8 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
     // if question editted or new
     final idQuestion = _isQuestionEdit ? _uid : Uuid().v1();
 
+
+
     final question = Question(
       id: idQuestion!,
       question: _question!,
@@ -116,14 +115,16 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
     );
 
     if (_isQuestionEdit) {
-      Provider.of<UIQuizCreateProvider>(context, listen: false)
+      Provider.of<CreateQuizProvider>(context, listen: false)
           .editQuestion(question);
     } else {
-      Provider.of<UIQuizCreateProvider>(context, listen: false)
+      Provider.of<CreateQuizProvider>(context, listen: false)
           .addQuestion(question);
     }
     _goBackToCreateQuestionsArea();
   }
+
+
 
   void _goBackToCreateQuestionsArea() {
     FocusScope.of(context).unfocus();
@@ -132,9 +133,11 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
 
   void _removeQuestion() {
     _goBackToCreateQuestionsArea();
-    Provider.of<UIQuizCreateProvider>(context, listen: false)
+    Provider.of<CreateQuizProvider>(context, listen: false)
         .removeQuestion(_uid!);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +155,7 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
         return false;
       },
       child: Scaffold(
+
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           foregroundColor: Theme.of(context).colorScheme.primary,
@@ -160,11 +164,7 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
             Spacer(),
             if (_isQuestionEdit)
               IconButton(
-                onPressed: _removeQuestion,
-                icon: Icon(
-                  Icons.delete_forever,
-                ),
-              ),
+                  onPressed: _removeQuestion, icon: Icon(Icons.delete_forever)),
           ],
         ),
         body: SingleChildScrollView(
@@ -176,6 +176,7 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
                   padding: EdgeInsets.all(16),
                   child: Column(
                     children: [
+
                       TextFormField(
                         initialValue: _question,
                         onChanged: (v) {
