@@ -24,14 +24,14 @@ quiz game:
 home page:
 - [x] official tests
 
+quiz create other:
+- [x] delete quiz
+- [x] edit created quiz
+- [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
+
 quiz game:
 - [ ] previous result
 - [ ] timer
-
-quiz create other:
-- [x] delete quiz
-- [ ] edit created quiz
-- [ ] fix error A RenderFlex overflowed: when keyboard opened and navigator goes to create_questions_area_screen
 
 other:
 - [ ] leaderboard
