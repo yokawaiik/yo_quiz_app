@@ -9,7 +9,6 @@ import 'package:yo_quiz_app/src/core/models/unknown_exception.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question.dart';
 import 'package:yo_quiz_app/src/modules/create/models/quiz.dart';
 
-
 class CreateQuizProvider {
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
@@ -18,14 +17,7 @@ class CreateQuizProvider {
   Quiz quiz = Quiz(questions: []);
 
   String? quizImage;
-
-  // List<Question> _questions = [];
-
-  // List<Question> get questions => [..._questions];
-  // List<Question> get questions => [...?quiz.questions];
-
   List<Question> get questions => [...?quiz.questions];
-
 
   set title(String? title) {
     print(title);
@@ -42,16 +34,10 @@ class CreateQuizProvider {
   String? get description => quiz.description;
 
   void cancelCreateQuiz() {
-    print("CreateQuizProvider cancelCreateQuiz");
-    // print("${quiz.description} ${quiz.title}");
     quizImage = null;
-    // description = null;
-    // title = null;
-
     quiz = Quiz(questions: []);
   }
 
-  // Future<void> createQuiz(Quiz quiz) async {
   Future<void> createQuiz() async {
     try {
       // create quiz doc
@@ -71,12 +57,10 @@ class CreateQuizProvider {
 
       // ? if Quiz update then update image in another method setQuizImage
       if (quizImage != null) {
-        // await uploadQuizImage(isCreateQuiz: true);
         await uploadQuizImage(isCreateQuiz: true);
       }
 
       // create quiz nested collection "questions"
-
       for (var item in quiz.questions!) {
         int rightAnswers = 0;
         for (var answer in item.answers) {
@@ -103,6 +87,28 @@ class CreateQuizProvider {
     } catch (e) {
       print("createQuiz $e");
 
+      throw UnknownException(e.toString());
+    }
+  }
+
+  Future<void> updateQuiz() async {
+    try {
+      await _db.collection("quizzes").doc(quiz.id).update({
+        "title": quiz.title!,
+        "description": quiz.description,
+        "created": quiz.created,
+        "questionCount": quiz.questions!.length,
+        "scope": quiz.scope.name,
+        "timer": quiz.timer,
+      });
+
+      // todo: update question method
+
+    } on FirebaseException catch (e) {
+      var message = "Database error";
+      throw ApiException(message);
+    } catch (e) {
+      print("updateQuiz $e");
       throw UnknownException(e.toString());
     }
   }
@@ -145,9 +151,6 @@ class CreateQuizProvider {
     try {
       final downloadURL =
           await _firebaseStorage.ref(quiz.quizImageRef).getDownloadURL();
-
-      print("loadQuizImage $downloadURL");
-
       quizImage = downloadURL;
     } catch (e) {
       print(e);
@@ -155,11 +158,7 @@ class CreateQuizProvider {
     }
   }
 
-  // void editQuestion(Question editedQuestion) async {
-
-
   Future<Quiz> loadQuizToEdit(String id) async {
-    print("Provider loadQuizToEdit");
     try {
       final quizDoc = await _db.collection("quizzes").doc(id).get();
 
@@ -169,11 +168,6 @@ class CreateQuizProvider {
           await _db.collection("quizzes").doc(id).collection("questions").get();
 
       quiz = Quiz.fromDoc(quizDoc, questionsSnapshot);
-      // await loadQuizImage();
-
-      // quizImage
-
-      // print("Provider loadQuizToEdit quiz.id: ${quiz.id}");
       return quiz;
     } on FirebaseException catch (e) {
       var message = "Database error";
@@ -181,6 +175,82 @@ class CreateQuizProvider {
       throw ApiException(message);
     } catch (e) {
       print("loadQuizToEdit $e");
+
+      throw UnknownException(e.toString());
+    }
+  }
+
+  Future<void> removeQuestion(String id) async {
+    try {
+      final indexItem = quiz.questions!.indexWhere((item) => item.id == id);
+
+      if (quiz.id != null && quiz.questions![indexItem].isEditted) {
+        await _db
+            .collection("quizzes")
+            .doc(quiz.id)
+            .collection("questions")
+            .doc(id)
+            .delete();
+      }
+
+      quiz.questions!.removeAt(indexItem);
+    } on FirebaseException catch (e) {
+      var message = "Database error";
+
+      throw ApiException(message);
+    } catch (e) {
+      print("loadQuizToEdit $e");
+
+      throw UnknownException(e.toString());
+    }
+  }
+
+  Future<void> editQuestion(Question editedQuestion) async {
+    try {
+      final index = quiz.questions!
+          .indexWhere((question) => question.id == editedQuestion.id);
+
+      if (quiz.id != null && quiz.questions![index].isEditted) {
+        await _db
+            .collection("quizzes")
+            .doc(quiz.id)
+            .collection("questions")
+            .doc(quiz.questions![index].id)
+            .update(editedQuestion.toMap());
+      }
+
+      quiz.questions![index] = editedQuestion;
+    } on FirebaseException catch (e) {
+      var message = "Database error";
+
+      throw ApiException(message);
+    } catch (e) {
+      print("editQuestion $e");
+
+      throw UnknownException(e.toString());
+    }
+  }
+
+  Future<void> createQuestion(Question question) async {
+    try {
+      quiz.questions!.add(question);
+
+      if (quiz.id != null) {
+        await _db
+            .collection("quizzes")
+            .doc(quiz.id)
+            .collection("questions")
+            .doc(question.id)
+            .set(question.toMap());
+      }
+
+
+    } on FirebaseException catch (e) {
+      var message = "Database error";
+
+      throw ApiException(message);
+    } catch (e) {
+      print("createQuestion $e");
 
       throw UnknownException(e.toString());
     }

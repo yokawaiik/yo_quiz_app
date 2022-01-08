@@ -86,7 +86,7 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 height: mediaQuery.size.height -
                     appBar.preferredSize.height -
                     mediaQuery.padding.top,
@@ -111,7 +111,7 @@ class _CreateQuestionsAreaScreenState extends State<CreateQuestionsAreaScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          // Todo: variant colors when question
+                         
                           color: Theme.of(context).colorScheme.primaryVariant,
                         ),
                         child: Center(

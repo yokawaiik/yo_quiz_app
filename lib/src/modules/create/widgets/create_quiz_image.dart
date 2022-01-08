@@ -9,7 +9,7 @@ import 'package:yo_quiz_app/src/modules/create/provider/ui_quiz_create_provider.
 class CreateQuizImage extends StatefulWidget {
   final double? height;
 
-  CreateQuizImage({
+  const CreateQuizImage({
     Key? key,
     this.height,
   }) : super(key: key);
@@ -30,10 +30,10 @@ class _CreateQuizImageState extends State<CreateQuizImage> {
   }
 
   Future<void> _loadInitialImage() async {
-    final createQuizProvider = Provider.of<CreateQuizProvider>(context, listen: false);
+    final uIQuizCreateProvider = Provider.of<UIQuizCreateProvider>(context, listen: false);
     // print("_loadInitialImage");
-    await createQuizProvider.loadQuizImage();
-    _quizImageUrl = createQuizProvider.quizImage;
+    await uIQuizCreateProvider.createQuizProvider.loadQuizImage();
+    _quizImageUrl = uIQuizCreateProvider.createQuizProvider.quizImage;
   }
 
   

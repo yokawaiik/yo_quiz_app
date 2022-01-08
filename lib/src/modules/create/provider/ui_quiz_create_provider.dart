@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:yo_quiz_app/src/modules/create/models/question.dart';
 import 'package:yo_quiz_app/src/modules/create/provider/create_quiz_provider.dart';
@@ -23,8 +22,19 @@ class UIQuizCreateProvider extends ChangeNotifier {
     createQuizProvider = createQuizProvider;
   }
 
-  Future<void>? updateQuiz(BuildContext context) {
+  Future<void>? updateQuiz(BuildContext context) async {
+    isQuizUpload = true;
+    notifyListeners();
     print("updateQuiz");
+
+    createQuizProvider.title = title;
+    createQuizProvider.description = description;
+
+    await createQuizProvider.updateQuiz();
+
+    notifyListeners();
+    isQuizUpload = false;
+    closeCreateQuiz(context);
   }
 
   Future<void>? createQuiz(BuildContext context) async {
@@ -36,8 +46,6 @@ class UIQuizCreateProvider extends ChangeNotifier {
     createQuizProvider.description = description;
 
     await createQuizProvider.createQuiz();
-   
-   
 
     notifyListeners();
     isQuizUpload = false;
@@ -45,28 +53,30 @@ class UIQuizCreateProvider extends ChangeNotifier {
     closeCreateQuiz(context);
   }
 
-  void editQuestion(Question editedQuestion) {
-    final index = createQuizProvider.quiz.questions!
-        .indexWhere((question) => question.id == editedQuestion.id);
+  Future<void> editQuestion(Question editedQuestion) async {
 
-    createQuizProvider.quiz.questions![index] = editedQuestion;
+    await createQuizProvider.editQuestion(editedQuestion);
+
     notifyListeners();
   }
 
-  void removeQuestion(String id) {
-    createQuizProvider.quiz.questions!.removeWhere((item) => item.id == id);
+  Future<void> removeQuestion(String id) async {
+    await createQuizProvider.removeQuestion(id);
+
     notifyListeners();
   }
 
-  void addQuestion(Question question) async {
-    createQuizProvider.quiz.questions!.add(question);
+  Future<void> addQuestion(Question question) async {
+    
+
+    await createQuizProvider.createQuestion(question);
+
     notifyListeners();
   }
 
   void closeCreateQuiz(context) {
     print("closeCreateQuiz");
     Navigator.of(context).pop();
-
 
     createQuizProvider.cancelCreateQuiz();
     title = null;
@@ -85,7 +95,6 @@ class UIQuizCreateProvider extends ChangeNotifier {
 
   void goToCreateQuestionsArea(
       BuildContext context, GlobalKey<FormState> form) {
-    
     if (!isQuizInfoValid(form)) return;
 
     FocusScope.of(context).unfocus();
@@ -98,9 +107,11 @@ class UIQuizCreateProvider extends ChangeNotifier {
     try {
       // isQuizEdit = true;
 
-      // final createQuizProvider =
-      //     Provider.of<CreateQuizProvider>(context, listen: false);
-      // await createQuizProvider.loadQuizToEdit(id);
+      await createQuizProvider.loadQuizToEdit(id);
+
+      print("createQuizProvider.quiz.id ${createQuizProvider.quiz.id}");
+      title = createQuizProvider.title;
+      description = createQuizProvider.description;
     } catch (e) {
       print("_loadQuizToEdit: $e");
       Navigator.of(context).pop();
@@ -113,4 +124,7 @@ class UIQuizCreateProvider extends ChangeNotifier {
       );
     }
   }
+
+
+
 }

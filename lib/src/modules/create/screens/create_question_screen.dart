@@ -29,12 +29,17 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
 
   late bool _isQuestionEdit;
 
+  late bool _isUpload;
+  late bool _isEditted;
+
   @override
   void initState() {
     _form = GlobalKey<FormState>();
     _questionHasTimer = false;
     _answers = [];
     _isQuestionEdit = false;
+    _isUpload = false;
+    _isEditted = false;
 
     super.initState();
   }
@@ -57,6 +62,7 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
     _uid = question.id;
     _question = question.question;
     _answers = question.answers;
+    _isEditted = true;
   }
 
   void _addAnswer() {
@@ -102,6 +108,10 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
   void _createQuestion() {
     if (!_isFormValid()) return;
 
+    setState(() {
+      _isUpload = true;
+    });
+
     _form.currentState!.save();
 
     // if question editted or new
@@ -123,6 +133,10 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
           .addQuestion(question);
     }
     _goBackToCreateQuestionsArea();
+
+    setState(() {
+      _isUpload = false;
+    });
   }
 
   void _goBackToCreateQuestionsArea() {
@@ -134,6 +148,36 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
     _goBackToCreateQuestionsArea();
     Provider.of<UIQuizCreateProvider>(context, listen: false)
         .removeQuestion(_uid!);
+  }
+
+  Future<void> _updateQuestion() async {
+    try {
+      setState(() {
+        _isUpload = true;
+      });
+      final uIQuizCreateProvider =
+          Provider.of<UIQuizCreateProvider>(context, listen: false);
+
+      final idQuestion = _isQuestionEdit ? _uid : Uuid().v1();
+
+      final question = Question(
+        id: idQuestion!,
+        question: _question!,
+        answers: _answers,
+        timer: _questionHasTimer,
+        secondsInTimer: _secondsInTimer,
+        isEditted: _isUpload,
+      );
+
+      await uIQuizCreateProvider.editQuestion(question);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      setState(() {
+        _isUpload = false;
+      });
+    }
   }
 
   @override
@@ -305,18 +349,24 @@ class _CreateQuestionScreenState extends State<CreateQuestionScreen> {
                             ),
                           ),
                           OutlinedButton(
-                            onPressed: _createQuestion,
-                            child: Text(
-                              _isQuestionEdit
-                                  ? "Update question"
-                                  : "Create question",
-                              style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .fontSize,
-                              ),
-                            ),
+                            onPressed: _isQuestionEdit
+                                ? (_isUpload ? null : _updateQuestion)
+                                : _createQuestion,
+                            child: _isUpload
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Text(
+                                    _isQuestionEdit
+                                        ? "Update question"
+                                        : "Create question",
+                                    style: TextStyle(
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .headline6!
+                                          .fontSize,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),

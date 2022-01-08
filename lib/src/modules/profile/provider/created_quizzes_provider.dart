@@ -8,7 +8,7 @@ class CreatedQuizzesProvider {
 
   Stream<List<CreatedQuiz>> createdQuizzes(String uid) {
     return _db.collection("quizzes")
-    .where("createdByUser", isEqualTo: uid).snapshots()
+    .where("createdByUser", isEqualTo: uid).orderBy("created").snapshots()
     .map((snapshot) => snapshot.docs.map(
       (doc) {
         // print(doc.id);
